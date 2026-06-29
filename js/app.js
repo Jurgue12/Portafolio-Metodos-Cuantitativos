@@ -1,11 +1,6 @@
-/**
- * DecisionLab Limón — Interactive Portfolio
- */
-
 (() => {
   'use strict';
 
-  // ─── DATA ───────────────────────────────────────────────
   const TOPICS = [
     { id: 'markov', num: '01', title: 'Análisis Markov', desc: 'Cuota de mercado retail en Limón', result: '49.24%', done: true, href: '#markov' },
     { id: 'control', num: '02', title: 'Control Estadístico', desc: 'Corte preciso de alambre', result: 'Bajo control', done: true, href: '#control' },
@@ -114,7 +109,7 @@
     },
   };
 
-  // ─── INIT ───────────────────────────────────────────────
+  
   let markovPeriod = 0;
   let markovChart = null;
   let controlXbarChart = null;
@@ -179,6 +174,7 @@
     initNav();
     initReveal();
     initOverview();
+    initResumenesPdf();
     initExerciseUI();
     initExerciseLayout();
     initTopicVideos();
@@ -382,7 +378,32 @@
     if (progressRing) progressRing.style.strokeDashoffset = String(327 * (1 - done / total));
   }
 
-  // ─── CONTEXT + SOLUTION UI ──────────────────────────────
+  function initResumenesPdf() {
+    const cfg = PORTFOLIO_CONFIG.resumenesPdf;
+    if (!cfg?.file) return;
+
+    const file = cfg.file;
+    const titleEl = document.getElementById('resumenesPdfTitle');
+    const descEl = document.getElementById('resumenesPdfDesc');
+    const viewEl = document.getElementById('resumenesPdfView');
+    const downloadEl = document.getElementById('resumenesPdfDownload');
+
+    if (titleEl) titleEl.textContent = file;
+    if (descEl && cfg.description) descEl.textContent = cfg.description;
+
+    [viewEl, downloadEl].forEach(el => {
+      if (!el) return;
+      el.href = file;
+      if (el.hasAttribute('download')) el.setAttribute('download', file);
+    });
+
+    document.querySelectorAll('#resumenesPdfCardPresentacion a').forEach(el => {
+      el.href = file;
+      if (el.hasAttribute('download')) el.setAttribute('download', file);
+    });
+  }
+
+  
   function initExerciseUI() {
     Object.entries(EXERCISE_CONTEXTS).forEach(([key, text]) => {
       const el = document.getElementById('ctx-' + key);
@@ -769,7 +790,6 @@
   function initPresentationSection() {
     const cfg = PORTFOLIO_CONFIG;
 
-    // Video embed
     const placeholder = document.getElementById('videoPlaceholder');
     const embed = document.getElementById('videoEmbed');
     const { type, url, title } = cfg.video;
@@ -799,9 +819,6 @@
       placeholder.innerHTML = `<video controls style="width:100%;max-height:400px" src="${url}"></video><p class="video-hint">${title}</p>`;
     }
 
-    // Script timeline removed — video ya publicado en YouTube
-
-    // PDF export grid
     const grid = document.getElementById('exportGrid');
     if (grid && cfg.pdfExports) {
       grid.innerHTML = cfg.pdfExports.map(e => `
@@ -825,10 +842,11 @@
   }
 
   function initPresentationMode() {
-    const sections = ['hero', 'overview', 'markov', 'control', 'simulation', 'networks', 'transport', 'programming', 'presentacion'];
+    const sections = ['hero', 'overview', 'resumenes', 'markov', 'control', 'simulation', 'networks', 'transport', 'programming', 'presentacion'];
     const sectionLabels = {
       hero: 'Inicio',
       overview: 'Panorama',
+      resumenes: 'Resúmenes ejecutivos',
       markov: 'Markov',
       control: 'Control estadístico',
       simulation: 'Simulación',
@@ -872,7 +890,6 @@
     });
   }
 
-  // ─── MARKOV ─────────────────────────────────────────────
   function initMarkov() {
     renderMarkovMatrix();
     renderMarkovForecastTable();
@@ -1005,7 +1022,6 @@
     markovChart.update('none');
   }
 
-  // ─── CONTROL ────────────────────────────────────────────
   function initControl() {
     renderControlStats();
     renderControlTable();
@@ -1156,7 +1172,6 @@
     };
   }
 
-  // ─── SIMULATION ─────────────────────────────────────────
   function initSimulation() {
     ['a', 'b', 'c'].forEach(key => {
       buildSimTable(key);
@@ -1230,7 +1245,6 @@
 
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-  // ─── NETWORK ────────────────────────────────────────────
   function initNetwork() {
     renderNetwork('shortest');
     document.querySelectorAll('.legend-btn').forEach(btn => {
@@ -1306,7 +1320,6 @@
     document.getElementById('networkSteps').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
   }
 
-  // ─── TRANSPORT ──────────────────────────────────────────
   function initTransport() {
     renderTransportMatrix();
     renderTransportSolution();
@@ -1378,7 +1391,6 @@
       </div>`).join('');
   }
 
-  // ─── PROGRAMMING ────────────────────────────────────────
   function initProgramming() {
     const xSlider = document.getElementById('goalX');
     const ySlider = document.getElementById('goalY');
@@ -1473,7 +1485,6 @@
     const c = getChartColors();
     const ctx = document.getElementById('nonlinearChart').getContext('2d');
 
-    // Feasible region boundary points
     const constraint1 = [];
     for (let y = 0; y <= 40; y += 2) constraint1.push({ x: (120 - 3 * y) / 2, y });
     const constraint2 = [];
@@ -1535,7 +1546,6 @@
     });
   }
 
-  // ─── TABS ───────────────────────────────────────────────
   function initTabs() {
     document.querySelectorAll('.tab-bar').forEach(bar => {
       bar.querySelectorAll('.tab').forEach(tab => {

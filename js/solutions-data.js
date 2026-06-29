@@ -1,6 +1,4 @@
-/**
- * Contextos, resoluciones paso a paso y decisiones gerenciales
- */
+
 const SOLUTIONS = {
   markov: {
     title: 'Análisis Markov — Supermercados en Limón',

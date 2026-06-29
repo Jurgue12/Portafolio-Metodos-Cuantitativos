@@ -1,4 +1,4 @@
-/* DecisionLab Limón — Portfolio Styles */
+
 
 :root {
   --bg-deep: #060d18;
@@ -81,7 +81,6 @@ body {
 
 body:hover .cursor-glow { opacity: 1; }
 
-/* Loader */
 .loader {
   position: fixed;
   inset: 0;
@@ -114,7 +113,6 @@ body:hover .cursor-glow { opacity: 1; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Navigation */
 .nav {
   position: fixed;
   top: 0;
@@ -213,7 +211,6 @@ body:hover .cursor-glow { opacity: 1; }
 :root:not([data-theme]) .icon-moon { display: none; }
 [data-theme="light"] .icon-moon { display: block; }
 
-/* Hero */
 .hero {
   position: relative;
   min-height: 100vh;
@@ -431,7 +428,6 @@ body:hover .cursor-glow { opacity: 1; }
   50% { opacity: 1; transform: scaleY(1); }
 }
 
-/* Sections */
 .section {
   padding: 6rem 0;
   position: relative;
@@ -474,7 +470,6 @@ body:hover .cursor-glow { opacity: 1; }
 
 .section-header p { color: var(--text-muted); font-size: 1.05rem; }
 
-/* Reveal animation */
 .reveal {
   opacity: 0;
   transform: translateY(28px);
@@ -486,7 +481,6 @@ body:hover .cursor-glow { opacity: 1; }
   transform: translateY(0);
 }
 
-/* Progress card */
 .progress-card {
   display: flex;
   align-items: center;
@@ -548,7 +542,6 @@ body:hover .cursor-glow { opacity: 1; }
 .pill.done { background: rgba(0, 212, 170, 0.12); border-color: var(--border-accent); color: var(--accent); }
 .pill.pending { background: rgba(124, 141, 181, 0.12); color: var(--pending); }
 
-/* Card grid */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -608,7 +601,6 @@ body:hover .cursor-glow { opacity: 1; }
   color: var(--accent);
 }
 
-/* Panels */
 .split-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -639,7 +631,6 @@ body:hover .cursor-glow { opacity: 1; }
   margin-bottom: 1.25rem;
 }
 
-/* Horizontal scroll for wide tables (especially mobile) */
 .table-scroll-wrap,
 .matrix-wrap,
 .markov-forecast-wrap,
@@ -657,7 +648,6 @@ body:hover .cursor-glow { opacity: 1; }
   contain: inline-size;
 }
 
-/* Markov matrix */
 .matrix-wrap {
   margin-bottom: 1.5rem;
 }
@@ -726,7 +716,6 @@ body:hover .cursor-glow { opacity: 1; }
 .result-card .label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
 .result-card .value { font-family: var(--font-display); font-size: 1.5rem; color: var(--accent); margin-top: 4px; }
 
-/* Solution blocks */
 .solution-block {
   margin-top: 2rem;
   border: 1px solid var(--border);
@@ -772,7 +761,6 @@ body:hover .cursor-glow { opacity: 1; }
   font-weight: 600;
 }
 
-/* Placeholder */
 .placeholder-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -877,7 +865,6 @@ body:hover .cursor-glow { opacity: 1; }
   border-top: 1px solid var(--border);
 }
 
-/* Tabs */
 .tab-bar {
   display: flex;
   gap: 8px;
@@ -904,7 +891,6 @@ body:hover .cursor-glow { opacity: 1; }
 .sim-panel, .trans-panel, .prog-panel { display: none; }
 .sim-panel.active, .trans-panel.active, .prog-panel.active { display: block; }
 
-/* Data tables */
 .table-scroll-wrap {
   margin-bottom: 1rem;
   border-radius: var(--radius-sm);
@@ -940,7 +926,6 @@ body:hover .cursor-glow { opacity: 1; }
 .theoretical { font-size: 0.95rem; color: var(--text-muted); }
 .theoretical strong { color: var(--accent); font-family: var(--font-display); font-size: 1.2rem; }
 
-/* Simulation */
 .sim-controls { display: flex; gap: 10px; margin-bottom: 1.25rem; }
 
 .sim-timeline {
@@ -991,7 +976,6 @@ body:hover .cursor-glow { opacity: 1; }
 
 .conclusion { margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); font-style: italic; }
 
-/* Network */
 .network-layout {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
@@ -1099,7 +1083,6 @@ body:hover .cursor-glow { opacity: 1; }
 
 .step-list li { padding: 6px 0; }
 
-/* Transport matrices */
 .transport-scroll-wrap {
   margin-bottom: 0.5rem;
 }
@@ -1144,7 +1127,6 @@ body:hover .cursor-glow { opacity: 1; }
 .assign-pair .route { color: var(--accent); font-weight: 600; }
 .assign-pair .score { font-family: var(--font-display); font-size: 1.3rem; color: var(--gold); }
 
-/* Programming */
 .formula {
   font-family: 'Consolas', monospace;
   font-size: 1rem;
@@ -1240,7 +1222,6 @@ body:hover .cursor-glow { opacity: 1; }
 .meter-fill.warn { background: var(--gold); }
 .meter-fill.bad { background: var(--danger); }
 
-/* Footer */
 .footer {
   padding: 4rem 0 2rem;
   border-top: 1px solid var(--border);
@@ -1262,7 +1243,6 @@ body:hover .cursor-glow { opacity: 1; }
 .footer p { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 0.5rem; }
 .footer-meta { font-size: 0.78rem !important; color: var(--text-subtle) !important; }
 
-/* Responsive */
 @media (max-width: 900px) {
   .nav-pres-btn {
     display: inline-flex;
@@ -1485,7 +1465,6 @@ body:hover .cursor-glow { opacity: 1; }
   .reveal { opacity: 1; transform: none; }
 }
 
-/* Print — resoluciones para entrega académica */
 @media print {
   .nav, .loader, .grain, .cursor-glow, .scroll-hint,
   .hero-bg, .sim-controls, .period-controls, .theme-toggle,

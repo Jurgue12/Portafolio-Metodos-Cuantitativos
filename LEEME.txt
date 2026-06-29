@@ -8,7 +8,7 @@ COMO ABRIRLO (para la profesora o quien evalua)
 
 ==============================================
 
-1. Descomprima la carpeta "portfolio" si viene en ZIP.
+1. Descomprima la carpeta "portafolio" si viene en ZIP.
 
 2. Doble clic en:  ABRIR_PORTAFOLIO.bat
 
@@ -26,11 +26,19 @@ QUE INCLUYE
 
 ===========
 
+- Resumenes ejecutivos (PDF): seccion "Resumenes" o boton en inicio
+
 - 6 temas del curso con ejercicios interactivos
 
 - Botones "Solucion paso a paso" y descarga de PDF por ejercicio
 
 - Videos de contexto historico (se abren en YouTube al hacer clic)
+
+ARCHIVO DE RESUMENES
+
+====================
+
+Resumenes Jurguen Salas F.pdf (en esta misma carpeta)
 
 VIDEO DE PRESENTACION
 
@@ -51,5 +59,4 @@ SOPORTE
 =======
 
 Si algo no se ve bien, pruebe otro navegador o verifique conexion a internet.
-
 

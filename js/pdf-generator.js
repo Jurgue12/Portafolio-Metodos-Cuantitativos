@@ -1,7 +1,4 @@
-/**
- * Generación de PDF directa con jsPDF (sin html2canvas)
- * Evita páginas en blanco y contenido vacío
- */
+
 const PdfGenerator = (() => {
   const PAGE_BOTTOM = 287;
   const MARGIN = 14;
@@ -35,9 +32,9 @@ const PdfGenerator = (() => {
       [/≤/g, '<='],
       [/≥/g, '>='],
       [/≠/g, '!='],
-      [/−/g, '-'],      // minus sign unicode
-      [/–/g, '-'],      // en dash
-      [/—/g, '-'],      // em dash
+      [/−/g, '-'],      
+      [/–/g, '-'],      
+      [/—/g, '-'],      
       [/·/g, '.'],
       [/×/g, 'x'],
       [/÷/g, '/'],
@@ -61,7 +58,7 @@ const PdfGenerator = (() => {
 
     replacements.forEach(([re, rep]) => { out = out.replace(re, rep); });
 
-    // Quitar caracteres fuera de Latin-1 que Helvetica no renderiza bien
+    
     out = out.replace(/[^\u0009\u000A\u000D\u0020-\u00FF]/g, '');
 
     return out;

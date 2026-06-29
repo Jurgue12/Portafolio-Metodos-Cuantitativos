@@ -9,24 +9,31 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <link rel="stylesheet" href="css/style.css?v=3">
-  <link rel="stylesheet" href="css/solutions.css?v=3">
-  <link rel="stylesheet" href="css/mobile-tables.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=5">
+  <link rel="stylesheet" href="css/solutions.css?v=5">
+  <link rel="stylesheet" href="css/mobile-tables.css?v=5">
 </head>
 <body>
   <div class="grain" aria-hidden="true"></div>
   <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
 
-  <!-- Loader -->
-  <div class="loader" id="loader">
+    <div class="loader" id="loader">
     <div class="loader-inner">
       <div class="loader-ring"></div>
       <span class="loader-text">Cargando DecisionLab</span>
     </div>
   </div>
+  <script>
+    (function () {
+      function hideLoader() {
+        var el = document.getElementById('loader');
+        if (el) el.classList.add('hidden');
+      }
+      window.addEventListener('load', function () { setTimeout(hideLoader, 800); });
+    })();
+  </script>
 
-  <!-- Navigation -->
-  <nav class="nav" id="nav">
+    <nav class="nav" id="nav">
     <a href="#hero" class="nav-brand">
       <span class="brand-icon">◈</span>
       <span class="brand-text">DecisionLab<span class="brand-accent">Limón</span></span>
@@ -37,6 +44,7 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="#hero" data-section="hero">Inicio</a></li>
       <li><a href="#overview" data-section="overview">Panorama</a></li>
+      <li><a href="#resumenes" data-section="resumenes">Resúmenes</a></li>
       <li><a href="#markov" data-section="markov">Markov</a></li>
       <li><a href="#control" data-section="control">Control</a></li>
       <li><a href="#simulation" data-section="simulation">Simulación</a></li>
@@ -52,8 +60,7 @@
     </button>
   </nav>
 
-  <!-- Hero -->
-  <header class="hero" id="hero">
+    <header class="hero" id="hero">
     <div class="hero-bg">
       <canvas id="heroCanvas"></canvas>
     </div>
@@ -73,6 +80,7 @@
       </p>
       <div class="hero-actions reveal">
         <a href="#overview" class="btn btn-primary">Explorar portafolio</a>
+        <a href="#resumenes" class="btn btn-ghost">Resúmenes ejecutivos</a>
         <button type="button" class="btn btn-accent btn-presentation-mode" id="btnPresentationMode" title="Recorrer secciones en pantalla limpia">
           ▶ Modo presentación
         </button>
@@ -100,8 +108,7 @@
   </header>
 
   <main>
-    <!-- Overview -->
-    <section class="section" id="overview">
+        <section class="section" id="overview">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-tag">01 · Panorama</span>
@@ -140,8 +147,27 @@
       </div>
     </section>
 
-    <!-- Markov -->
-    <section class="section section-alt" id="markov">
+        <section class="section section-alt" id="resumenes">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Resúmenes ejecutivos</span>
+          <h2>Síntesis de las exposiciones del curso</h2>
+          <p>Documento PDF con los resúmenes analíticos de los seis temas expuestos por los equipos, elaborados con palabras propias según la guía de evaluación IF7200.</p>
+        </div>
+
+        <div class="resumenes-pdf-card reveal panel" id="resumenesPdfCard">
+          <div class="resumenes-pdf-badge">PDF · 6 temas</div>
+          <h3 class="panel-title" id="resumenesPdfTitle">Resumenes Jurguen Salas F.pdf</h3>
+          <p class="resumenes-pdf-desc" id="resumenesPdfDesc">Markov · Control estadístico · Simulación Monte Carlo · Modelos de redes · Transporte y asignación · Programación</p>
+          <div class="resumenes-pdf-actions">
+            <a href="Resumenes Jurguen Salas F.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="resumenesPdfView">Ver PDF</a>
+            <a href="Resumenes Jurguen Salas F.pdf" download class="btn btn-ghost" id="resumenesPdfDownload">Descargar PDF</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+        <section class="section" id="markov">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-tag">02 · Análisis Markov</span>
@@ -177,8 +203,7 @@
       </div>
     </section>
 
-    <!-- Control estadístico -->
-    <section class="section" id="control">
+        <section class="section" id="control">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-tag">03 · Control Estadístico</span>
@@ -208,8 +233,7 @@
       </div>
     </section>
 
-    <!-- Simulation -->
-    <section class="section section-alt" id="simulation">
+        <section class="section section-alt" id="simulation">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-tag">04 · Simulación Monte Carlo</span>
@@ -294,8 +318,7 @@
       </div>
     </section>
 
-    <!-- Networks -->
-    <section class="section" id="networks">
+        <section class="section" id="networks">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-tag">05 · Modelos de Redes</span>
@@ -329,8 +352,7 @@
       </div>
     </section>
 
-    <!-- Transport -->
-    <section class="section section-alt" id="transport">
+        <section class="section section-alt" id="transport">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-tag">06 · Transporte y Asignación</span>
@@ -378,8 +400,7 @@
       </div>
     </section>
 
-    <!-- Programming -->
-    <section class="section" id="programming">
+        <section class="section" id="programming">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-tag">07 · Programación</span>
@@ -473,8 +494,7 @@
       </div>
     </section>
 
-    <!-- Presentación en video -->
-    <section class="section section-alt" id="presentacion">
+        <section class="section section-alt" id="presentacion">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-tag">08 · Presentación</span>
@@ -491,6 +511,15 @@
           </div>
         </div>
 
+        <div class="export-all-card reveal panel" id="resumenesPdfCardPresentacion">
+          <h3 class="panel-title">Resúmenes ejecutivos (PDF)</h3>
+          <p class="export-all-desc">Los seis resúmenes teóricos de las exposiciones están en el documento adjunto al portafolio.</p>
+          <div class="resumenes-pdf-actions">
+            <a href="Resumenes Jurguen Salas F.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">Ver PDF</a>
+            <a href="Resumenes Jurguen Salas F.pdf" download class="btn btn-ghost btn-sm">Descargar</a>
+          </div>
+        </div>
+
         <div class="export-all-card reveal panel">
           <h3 class="panel-title">Resoluciones en PDF (punto 5)</h3>
           <p class="export-all-desc">Descarga cada ejercicio como PDF formal para entrega impresa o adjunto en Moodle. También disponible dentro de cada modal con el botón <strong>Descargar PDF</strong>.</p>
@@ -500,16 +529,14 @@
     </section>
   </main>
 
-  <!-- PDF export overlay (visible briefly while generating) -->
-  <div class="pdf-export-overlay" id="pdfExportOverlay" aria-hidden="true">
+    <div class="pdf-export-overlay" id="pdfExportOverlay" aria-hidden="true">
     <div class="pdf-export-status">
       <div class="loader-ring"></div>
       <p>Generando PDF…</p>
     </div>
   </div>
 
-  <!-- History video modal (YouTube in-app) -->
-  <div class="history-video-modal" id="historyVideoModal" role="dialog" aria-modal="true" aria-labelledby="historyVideoTitle" hidden>
+    <div class="history-video-modal" id="historyVideoModal" role="dialog" aria-modal="true" aria-labelledby="historyVideoTitle" hidden>
     <div class="history-video-backdrop" id="historyVideoBackdrop"></div>
     <div class="history-video-panel">
       <div class="history-video-header">
@@ -521,8 +548,7 @@
     </div>
   </div>
 
-  <!-- Solution Modal -->
-  <div class="solution-modal" id="solutionModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="solution-modal" id="solutionModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="solution-modal-backdrop" id="modalBackdrop"></div>
     <div class="solution-modal-panel">
       <div class="solution-modal-header">
@@ -564,9 +590,9 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-  <script src="js/config.js?v=3"></script>
-  <script src="js/solutions-data.js?v=3"></script>
-  <script src="js/pdf-generator.js?v=3"></script>
-  <script src="js/app.js?v=3"></script>
+  <script src="js/config.js?v=5"></script>
+  <script src="js/solutions-data.js?v=5"></script>
+  <script src="js/pdf-generator.js?v=5"></script>
+  <script src="js/app.js?v=5"></script>
 </body>
 </html>

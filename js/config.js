@@ -1,6 +1,4 @@
-/**
- * Configuración personalizable — edita aquí tu video y datos de entrega
- */
+
 const PORTFOLIO_CONFIG = {
   student: {
     name: 'Jurguen Salas Herrera',
@@ -9,30 +7,24 @@ const PORTFOLIO_CONFIG = {
     campus: 'UCR Sede del Caribe',
   },
 
-  /**
-   * TU VIDEO — recorrido general del portafolio (único video, sección Presentación).
-   * Muestra navegación, modo presentación, un ejercicio y PDFs.
-   *
-   * Opción A — YouTube: type: 'youtube', url: embed URL
-   * Opción B — Local: type: 'local', url: 'assets/video/portafolio-general.mp4'
-   * Opción C — Drive: type: 'drive', url: preview embed
-   */
+  
+  resumenesPdf: {
+    file: 'Resumenes Jurguen Salas F.pdf',
+    title: 'Resúmenes ejecutivos — IF7200',
+    description: 'Síntesis analítica de las seis exposiciones del curso: Markov, Control estadístico, Simulación Monte Carlo, Modelos de redes, Transporte y asignación, y Programación.',
+  },
+
+  
   video: {
     type: 'youtube',
     url: 'https://www.youtube.com/embed/boiCzzgww34',
     title: 'DecisionLab Limón — Recorrido general del portafolio (9 min)',
   },
 
-  /**
-   * Videos históricos de YouTube:
-   * - 'auto' (recomendado): embebidos solo si el portafolio está publicado en internet;
-   *   si se abre desde carpeta/ZIP, abre YouTube en el navegador (ideal para entregar a la profesora).
-   * - 'external': siempre abrir YouTube en pestaña nueva.
-   * - 'embed': intentar reproducir dentro de la página (requiere publicar en web).
-   */
+  
   videoPlayback: 'auto',
 
-  /** IDs de soluciones exportables a PDF */
+  
   pdfExports: [
     { id: 'markov', label: 'Markov — Supermercados' },
     { id: 'control', label: 'Control — Corte de alambre' },
@@ -47,10 +39,7 @@ const PORTFOLIO_CONFIG = {
     { id: 'prog-integer', label: 'Programación entera textil' },
   ],
 
-  /**
-   * Videos de YouTube sobre el origen e historia de cada tema.
-   * Edita los IDs si quieres cambiar el recurso (Compartir → Insertar → id del enlace).
-   */
+  
   topicVideos: {
     markov: {
       heading: '¿De dónde vienen las cadenas de Markov?',

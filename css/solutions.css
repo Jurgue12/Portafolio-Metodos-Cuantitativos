@@ -1,4 +1,4 @@
-/* Context cards, solution modal, decision blocks */
+
 
 .context-card {
   padding: 1.5rem 1.75rem;
@@ -31,7 +31,6 @@
   padding-right: 4rem;
 }
 
-/* Contexto + resolución agrupados; video histórico va debajo */
 .exercise-resolution-block {
   margin-bottom: 2rem;
   border: 1px solid var(--border);
@@ -158,7 +157,6 @@
   color: var(--text-muted);
 }
 
-/* Markov extended table */
 .markov-forecast-wrap {
   margin-top: 1.5rem;
 }
@@ -198,7 +196,6 @@
   font-weight: 700;
 }
 
-/* Integer programming */
 .resource-table {
   width: auto;
   min-width: 100%;
@@ -226,7 +223,6 @@
   font-weight: 700;
 }
 
-/* Solution Modal */
 .solution-modal {
   position: fixed;
   inset: 0;
@@ -654,7 +650,6 @@
   .context-card { break-inside: avoid; }
 }
 
-/* PDF export */
 .pdf-export-overlay {
   position: fixed;
   inset: 0;
@@ -899,7 +894,6 @@
   body.print-solution .pdf-export-status { display: none !important; }
 }
 
-/* Video & presentation section */
 .video-layout {
   display: grid;
   grid-template-columns: 1.4fr 0.6fr;
@@ -1017,7 +1011,6 @@
   margin-bottom: 1.25rem;
 }
 
-/* Panel — video explicativo del estudiante por tema */
 .topic-explain-panel {
   margin: 1.75rem 0 2rem;
 }
@@ -1098,7 +1091,6 @@
   font-size: 0.85rem;
 }
 
-/* Checklist videos por tema — sección presentación */
 .topic-videos-checklist-card {
   margin-bottom: 2rem;
 }
@@ -1192,7 +1184,46 @@
   font-weight: 700;
 }
 
-/* Presentation mode */
+.resumenes-pdf-card {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 2rem 2.25rem;
+}
+
+.resumenes-pdf-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-glow);
+  border: 1px solid var(--border-accent);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.resumenes-pdf-desc {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0.75rem 0 1.5rem;
+}
+
+.resumenes-pdf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+#resumenesPdfCardPresentacion .resumenes-pdf-actions {
+  justify-content: flex-start;
+  margin-top: 1rem;
+}
+
 body.presentation-mode .nav,
 body.presentation-mode .scroll-hint,
 body.presentation-mode .grain,
@@ -1233,7 +1264,6 @@ body.presentation-mode .presentation-bar {
   display: flex;
 }
 
-/* Topic history videos (YouTube) */
 .history-overview {
   margin-bottom: 2.5rem;
   padding: 1.75rem;
@@ -1614,7 +1644,6 @@ body.presentation-mode .presentation-bar {
   text-decoration: underline;
 }
 
-/* Control estadístico — corte de alambre */
 .chart-wrap-sm { height: 220px; margin-bottom: 0.5rem; }
 
 .control-table-wrap {
