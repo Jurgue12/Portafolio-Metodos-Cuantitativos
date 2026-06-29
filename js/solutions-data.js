@@ -25,22 +25,143 @@ const SOLUTIONS = {
 
   control: {
     title: 'Control Estadístico — Corte preciso de alambre',
-    subtitle: 'Gráficos X̄–R (24 subgrupos, n = 4)',
-    context: `Una planta de manufactura controla la longitud de cortes de alambre con subgrupos de 4 piezas cada hora, durante 24 horas. Los gráficos X̄–R permiten verificar si la media y la dispersión del proceso se mantienen estables o si hay causas especiales que requieran intervención.`,
+    subtitle: 'Gráficos de promedios y rangos (24 horas, 4 piezas por hora)',
+    context: `Una planta corta alambre a una longitud objetivo. Cada hora se miden **4 piezas** (muestra de tamaño n = 4) y se repite esto **24 horas seguidas**. Con esos datos se arman dos gráficos de control para responder una pregunta simple: **¿el proceso es estable o algo raro está pasando?**`,
     steps: [
-      { heading: 'Datos del ejercicio', body: `<p><strong>24 subgrupos</strong> (horas) · tamaño de subgrupo <strong>n = 4</strong></p><p>Constantes para n = 4: <strong>A₂ = 0.729</strong>, <strong>D₃ = 0</strong>, <strong>D₄ = 2.282</strong></p>` },
-      { heading: 'Gran media X̄̄', body: `<p>∑X̄ = 71.32 → X̄̄ = 71.32 / 24 = <strong>2.972</strong></p><p>Línea central del gráfico X̄: LC = 2.972</p>` },
-      { heading: 'Rango promedio R̄', body: `<p>∑R = 24.37 → R̄ = 24.37 / 24 = <strong>1.015</strong></p><p>Línea central del gráfico R: LC = 1.015</p>` },
-      { heading: 'Límites del gráfico X̄', body: `<ul class="calc-list"><li>LCS = X̄̄ + A₂R̄ = 2.972 + 0.729(1.015) = <strong>3.712</strong></li><li>LC = <strong>2.972</strong></li><li>LCI = X̄̄ − A₂R̄ = <strong>2.231</strong></li></ul>` },
-      { heading: 'Límites del gráfico R', body: `<ul class="calc-list"><li>LCS = D₄R̄ = 2.282(1.015) = <strong>2.317</strong></li><li>LC = <strong>1.015</strong></li><li>LCI = D₃R̄ = <strong>0</strong></li></ul>` },
-      { heading: 'Verificación', body: `<p>Gráfico X̄: mínimo observado 2.64, máximo 3.39 → todos dentro de [2.231 ; 3.712].</p><p>Gráfico R: mínimo 0.32, máximo 1.58 → todos dentro de [0 ; 2.317].</p><p>Ningún punto fuera de los límites en ninguno de los dos gráficos.</p>` },
+      {
+        heading: 'Paso 0 — ¿Qué estamos controlando?',
+        body: `<p>El ejercicio no pide solo calcular promedios: pide saber si la máquina de corte trabaja de forma **consistente** o si hay **causas especiales** (falla de calibración, operador distinto, material defectuoso, etc.).</p>
+<p><strong>Variación común:</strong> pequeñas diferencias normales entre piezas. <strong>Variación especial:</strong> algo fuera de lo habitual que hay que investigar.</p>
+<p>Herramienta usada: **gráficos de control X̄–R** (se leen “X barra” y “R”).</p>`,
+      },
+      {
+        heading: 'Paso 1 — Glosario (qué significa cada símbolo)',
+        body: `<table class="data-table"><thead><tr><th>Símbolo</th><th>Nombre en español</th><th>Qué es</th></tr></thead>
+<tbody>
+<tr><td><strong>n</strong></td><td>Tamaño de muestra</td><td>Piezas medidas por hora = <strong>4</strong></td></tr>
+<tr><td><strong>X̄</strong> (X barra)</td><td>Promedio del subgrupo</td><td>Media de las 4 longitudes de esa hora</td></tr>
+<tr><td><strong>R</strong></td><td>Rango del subgrupo</td><td>Pieza más larga − pieza más corta (en esa hora)</td></tr>
+<tr><td><strong>X̄̄</strong> (X doble barra)</td><td>Gran media</td><td>Promedio de los 24 promedios horarios</td></tr>
+<tr><td><strong>R̄</strong> (R barra)</td><td>Rango promedio</td><td>Promedio de los 24 rangos horarios</td></tr>
+<tr><td><strong>LC</strong></td><td>Línea central</td><td>Valor “normal” esperado del gráfico</td></tr>
+<tr><td><strong>LCI</strong></td><td>Límite inferior de control</td><td>Franja baja: si un punto cae aquí, alerta</td></tr>
+<tr><td><strong>LCS</strong></td><td>Límite superior de control</td><td>Franja alta: si un punto cae aquí, alerta</td></tr>
+<tr><td><strong>A₂, D₃, D₄</strong></td><td>Constantes de tabla</td><td>Números del libro para n = 4 (no se inventan)</td></tr>
+</tbody></table>`,
+      },
+      {
+        heading: 'Paso 2 — Estructura de los datos',
+        body: `<p>Cada **hora** es un **subgrupo**. En cada subgrupo:</p>
+<ol class="step-list">
+<li>Se miden <strong>4 piezas</strong> de alambre (n = 4).</li>
+<li>Se calcula <strong>X̄</strong> = promedio de esas 4 medidas.</li>
+<li>Se calcula <strong>R</strong> = medida máxima − medida mínima del subgrupo.</li>
+</ol>
+<p>Se repite durante <strong>24 horas</strong> → tenemos 24 valores de X̄ y 24 valores de R (ya calculados en la tabla del ejercicio).</p>
+<p><strong>Ejemplo conceptual (hora 1):</strong> si las 4 piezas midieran 3.0, 3.5, 3.2 y 3.4 → X̄ = 3.28 y R = 3.5 − 3.0 = 0.50. En la tabla real del ejercicio, hora 1 tiene X̄ = 3.25 y R = 0.71.</p>`,
+      },
+      {
+        heading: 'Paso 3 — Constantes para n = 4',
+        body: `<p>Como cada hora tiene <strong>n = 4</strong> piezas, el curso entrega estas constantes (tabla estadística):</p>
+<ul class="calc-list">
+<li><strong>A₂ = 0.729</strong> → se usa para calcular límites del gráfico de promedios (X̄)</li>
+<li><strong>D₃ = 0</strong> → límite inferior del gráfico R (con n = 4 suele ser cero)</li>
+<li><strong>D₄ = 2.282</strong> → límite superior del gráfico R</li>
+</ul>
+<p>No hay que deducirlas: vienen del tamaño de muestra n = 4.</p>`,
+      },
+      {
+        heading: 'Paso 4 — Calcular la gran media X̄̄',
+        body: `<p>Sumamos los <strong>24 promedios horarios</strong> (columna X̄):</p>
+<p>∑X̄ = 3.25 + 3.11 + 3.22 + 3.39 + 3.07 + 2.86 + 3.05 + 2.65 + 3.02 + 2.85 + 2.83 + 2.97 + 3.11 + 2.83 + 3.12 + 2.86 + 2.86 + 2.74 + 3.13 + 2.89 + 2.65 + 3.28 + 2.94 + 2.64</p>
+<p><strong>∑X̄ = 71.32</strong></p>
+<p>Dividimos entre 24 horas:</p>
+<p><strong>X̄̄ = 71.32 ÷ 24 = 2.9717 ≈ 2.972</strong></p>
+<p>Interpretación: la longitud promedio “global” del proceso ronda <strong>2.972</strong> (unidades del ejercicio). Esta es la <strong>línea central del gráfico X̄</strong>: LC<sub>X̄</sub> = 2.972.</p>`,
+      },
+      {
+        heading: 'Paso 5 — Calcular el rango promedio R̄',
+        body: `<p>Sumamos los <strong>24 rangos</strong> (columna R):</p>
+<p>∑R = 0.71 + 1.18 + 1.43 + 1.26 + 1.17 + 0.32 + 0.53 + 1.13 + 0.71 + 1.33 + 1.17 + 0.40 + 0.85 + 1.31 + 1.06 + 0.50 + 1.43 + 1.29 + 1.41 + 1.09 + 1.08 + 0.46 + 1.58 + 0.97</p>
+<p><strong>∑R = 24.37</strong></p>
+<p><strong>R̄ = 24.37 ÷ 24 = 1.0154 ≈ 1.015</strong></p>
+<p>Interpretación: en promedio, dentro de cada hora la diferencia entre la pieza más larga y la más corta ronda <strong>1.015</strong>. Esta es la <strong>línea central del gráfico R</strong>: LC<sub>R</sub> = 1.015.</p>`,
+      },
+      {
+        heading: 'Paso 6 — Límites del gráfico de promedios (X̄)',
+        body: `<p>Definen el “corredor seguro” donde deberían caer los promedios horarios si el proceso está estable:</p>
+<ul class="calc-list">
+<li><strong>Límite superior (LCS):</strong> X̄̄ + A₂·R̄ = 2.972 + 0.729(1.015) = 2.972 + 0.740 = <strong>3.712</strong></li>
+<li><strong>Línea central (LC):</strong> X̄̄ = <strong>2.972</strong></li>
+<li><strong>Límite inferior (LCI):</strong> X̄̄ − A₂·R̄ = 2.972 − 0.740 = <strong>2.231</strong></li>
+</ul>
+<p>Regla: si algún X̄ de una hora cae <strong>fuera</strong> de [2.231 ; 3.712], hay señal de problema en la media del proceso.</p>`,
+      },
+      {
+        heading: 'Paso 7 — Límites del gráfico de rangos (R)',
+        body: `<p>Controlan si la **dispersión** (variabilidad pieza a pieza) se salió de lo normal:</p>
+<ul class="calc-list">
+<li><strong>Límite superior (LCS):</strong> D₄·R̄ = 2.282(1.015) = <strong>2.317</strong></li>
+<li><strong>Línea central (LC):</strong> R̄ = <strong>1.015</strong></li>
+<li><strong>Límite inferior (LCI):</strong> D₃·R̄ = 0(1.015) = <strong>0</strong></li>
+</ul>
+<p>Regla: si algún R horario supera 2.317 o cae por debajo de 0 (imposible en la práctica), la variabilidad del subgrupo sería anormal.</p>`,
+      },
+      {
+        heading: 'Paso 8 — Resumen de límites (tabla final)',
+        body: `<table class="data-table"><thead><tr><th>Gráfico</th><th>LCI (piso)</th><th>LC (centro)</th><th>LCS (techo)</th></tr></thead>
+<tbody>
+<tr><td><strong>Promedios X̄</strong></td><td>2.231</td><td>2.972</td><td>3.712</td></tr>
+<tr><td><strong>Rangos R</strong></td><td>0</td><td>1.015</td><td>2.317</td></tr>
+</tbody></table>
+<p>Estos se dibujan como líneas horizontales en los gráficos interactivos del portafolio (línea verde = datos, líneas punteadas = límites).</p>`,
+      },
+      {
+        heading: 'Paso 9 — Comparar cada hora contra los límites',
+        body: `<p>Revisamos los 24 subgrupos. Extremos observados:</p>
+<ul class="calc-list">
+<li><strong>Gráfico X̄:</strong> valor más bajo = 2.64 · valor más alto = 3.39</li>
+<li>¿Están entre 2.231 y 3.712? Sí → <strong>las 24 horas pasan</strong></li>
+<li><strong>Gráfico R:</strong> valor más bajo = 0.32 · valor más alto = 1.58</li>
+<li>¿Están entre 0 y 2.317? Sí → <strong>las 24 horas pasan</strong></li>
+</ul>
+<p>Ningún punto queda fuera del corredor en ninguno de los dos gráficos.</p>`,
+      },
+      {
+        heading: 'Paso 10 — Muestra de verificación (3 horas)',
+        body: `<table class="data-table"><thead><tr><th>Hora</th><th>X̄</th><th>¿X̄ OK?</th><th>R</th><th>¿R OK?</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>3.25</td><td>2.231 ≤ 3.25 ≤ 3.712 ✓</td><td>0.71</td><td>0 ≤ 0.71 ≤ 2.317 ✓</td></tr>
+<tr><td>6</td><td>2.86</td><td>✓</td><td>0.32</td><td>✓ (rango más bajo del día)</td></tr>
+<tr><td>23</td><td>2.94</td><td>✓</td><td>1.58</td><td>✓ (rango más alto, aún dentro)</td></tr>
+</tbody></table>
+<p>Lo mismo ocurre con las otras 21 horas: todas muestran ✓ en la tabla del portafolio.</p>`,
+      },
+      {
+        heading: 'Paso 11 — ¿Por qué dos gráficos y no uno?',
+        body: `<ul class="calc-list">
+<li><strong>Gráfico X̄</strong> vigila si la longitud **promedio** se desvía (¿el corte quedó más largo o más corto en general?).</li>
+<li><strong>Gráfico R</strong> vigila si la **dispersión** entre piezas creció (¿hay piezas muy distintas entre sí en la misma hora?).</li>
+</ul>
+<p>Un proceso puede tener media estable pero variabilidad alta, o al revés. Por eso se usan **ambos**.</p>`,
+      },
+      {
+        heading: 'Paso 12 — Conclusión estadística',
+        body: `<p>Como <strong>todos</strong> los X̄ y todos los R caen dentro de sus límites:</p>
+<ul class="calc-list">
+<li>No hay evidencia de causas especiales en las 24 horas analizadas.</li>
+<li>Las fluctuaciones son **variación común** del sistema de corte.</li>
+<li>El proceso de corte preciso de alambre está <strong>bajo control estadístico</strong>.</li>
+</ul>
+<p>Acción gerencial: mantener el procedimiento actual; no se requiere ajuste urgente de la máquina por estos datos. Seguir monitoreando hora a hora.</p>`,
+      },
     ],
     decision: {
       title: 'Conclusión gerencial',
-      text: 'El proceso de corte preciso de alambre está bajo control estadístico. Las variaciones observadas corresponden a variación común del sistema; no se detectan causas especiales que afecten la producción en las 24 horas analizadas.',
+      text: 'Durante las 24 horas muestreadas, ningún promedio ni rango salió de los límites de control. El corte de alambre es estable: la longitud media ronda 2.972 y la dispersión típica ronda 1.015. No se detectaron causas especiales; el proceso puede continuar bajo el mismo esquema de control.',
       metrics: [
-        { label: 'X̄̄ (LC X̄)', value: '2.972' },
-        { label: 'R̄ (LC R)', value: '1.015' },
+        { label: 'Gran media (centro X̄)', value: '2.972' },
+        { label: 'Rango promedio (centro R)', value: '1.015' },
         { label: 'Estado del proceso', value: 'Bajo control ✓' },
       ],
     },
@@ -423,33 +544,241 @@ const SOLUTIONS = {
   'prog-goals': {
     title: 'Programación por Metas',
     subtitle: 'Panadería La Espiga Dorada — Grecia',
-    context: `Panadería artesanal que produce pan (x) y repostería fina (y). Debe cumplir tres metas jerárquicas: ganancia semanal de $2 200 (P1), exactamente 160 horas laborales (P2) y consumo energético ≤ 300 kWh (P3). El modelo minimiza desviaciones indeseables ponderadas por prioridad.`,
+    context: `Panadería artesanal en Grecia (Alajuela) que produce pan (x) y repostería fina (y). Debe cumplir **tres metas en orden de prioridad**: P1 ganancia $2 200, P2 exactamente 160 horas laborales, P3 energía ≤ 300 kWh. A diferencia de programación lineal clásica, aquí no todas las metas se cumplen al 100%: el modelo busca el **mejor compromiso** minimizando desviaciones indeseables.`,
     steps: [
-      { heading: 'Variables y metas', body: `<p>Pan: $30/lote, 2 h, 5 kWh · Repostería: $50/lote, 4 h, 8 kWh</p><p>Min Z = P1(d1⁻) + P2(d2⁻ + d2⁺) + P3(d3⁺)</p>` },
-      { heading: 'Restricciones por metas', body: `<ul class="calc-list"><li>30x + 50y + d1⁻ − d1⁺ = 2200</li><li>2x + 4y + d2⁻ − d2⁺ = 160</li><li>5x + 8y + d3⁻ − d3⁺ = 300</li></ul>` },
-      { heading: 'Solución por sustitución', body: `<p>De P1 y P2: 30x + 50y = 2200 y 2x + 4y = 160</p><p>Simplificando: x + 2y = 80 → y = 20, x = 40</p>` },
-      { heading: 'Verificación P3', body: `<p>Energía: 5(40) + 8(20) = 360 kWh → exceso d3⁺ = <strong>60 kWh</strong></p>` },
+      {
+        heading: 'Paso 0 — Entender el problema',
+        body: `<p>La gerencia decide <strong>cuántos lotes</strong> de cada producto hacer por semana. No hay una sola meta: hay tres, y la P1 (dinero) es más importante que la P2 (horas), y la P2 más que la P3 (energía).</p>
+<p><strong>Datos por lote:</strong></p>
+<table class="data-table"><thead><tr><th>Producto</th><th>Variable</th><th>Ganancia</th><th>Horas</th><th>Energía</th></tr></thead>
+<tbody>
+<tr><td>Pan artesanal</td><td>x</td><td>$30</td><td>2 h</td><td>5 kWh</td></tr>
+<tr><td>Repostería fina</td><td>y</td><td>$50</td><td>4 h</td><td>8 kWh</td></tr>
+</tbody></table>`,
+      },
+      {
+        heading: 'Paso 1 — Variables de decisión',
+        body: `<ul class="calc-list">
+<li><strong>x</strong> = lotes semanales de pan artesanal (≥ 0)</li>
+<li><strong>y</strong> = lotes semanales de repostería fina (≥ 0)</li>
+</ul>
+<p>Son las únicas decisiones que controla la gerencia.</p>`,
+      },
+      {
+        heading: 'Paso 2 — Metas y prioridades',
+        body: `<table class="data-table"><thead><tr><th>Prioridad</th><th>Meta</th><th>Valor objetivo</th><th>Desviación a evitar</th></tr></thead>
+<tbody>
+<tr><td><strong>P1</strong></td><td>Rentabilidad</td><td>$2 200 exactos</td><td>d1⁻ (faltante de dinero)</td></tr>
+<tr><td><strong>P2</strong></td><td>Acuerdo laboral</td><td>160 h exactas</td><td>d2⁻ y d2⁺ (faltante o exceso de horas)</td></tr>
+<tr><td><strong>P3</strong></td><td>Política ambiental</td><td>≤ 300 kWh</td><td>d3⁺ (exceso de energía)</td></tr>
+</tbody></table>
+<p>P1 tiene peso infinito relativo frente a P3: primero se protege el dinero, luego las horas, y al final la energía.</p>`,
+      },
+      {
+        heading: 'Paso 3 — Variables de desviación',
+        body: `<p>Cada meta se convierte en ecuación con variables que miden <strong>cuánto nos fallamos</strong>:</p>
+<ul class="calc-list">
+<li><strong>d1⁻</strong> = dólares que faltan para llegar a $2 200 · <strong>d1⁺</strong> = dólares de más</li>
+<li><strong>d2⁻</strong> = horas que faltan · <strong>d2⁺</strong> = horas de más (extras)</li>
+<li><strong>d3⁻</strong> = kWh ahorrados bajo 300 · <strong>d3⁺</strong> = kWh de exceso sobre 300</li>
+</ul>
+<p>Todas las desviaciones son ≥ 0.</p>`,
+      },
+      {
+        heading: 'Paso 4 — Restricciones por metas (ecuaciones)',
+        body: `<p>Cada meta pasa de desigualdad a igualdad sumando/restando desviaciones:</p>
+<ul class="calc-list">
+<li><strong>Meta 1 (ganancia):</strong> 30x + 50y + d1⁻ − d1⁺ = 2 200</li>
+<li><strong>Meta 2 (horas):</strong> 2x + 4y + d2⁻ − d2⁺ = 160</li>
+<li><strong>Meta 3 (energía):</strong> 5x + 8y + d3⁻ − d3⁺ = 300</li>
+</ul>
+<p>Ejemplo de lectura: si producimos poco, entra d1⁻ para “llenar” hasta 2 200. Si nos pasamos de energía, entra d3⁺.</p>`,
+      },
+      {
+        heading: 'Paso 5 — Función objetivo',
+        body: `<p><strong>Min Z = P1(d1⁻) + P2(d2⁻ + d2⁺) + P3(d3⁺)</strong></p>
+<p>Solo penalizamos desviaciones <strong>indeseables</strong>:</p>
+<ul class="calc-list">
+<li>No penalizamos d1⁺ (ganar de más no molesta en P1)</li>
+<li>No penalizamos d3⁻ (gastar menos energía tampoco)</li>
+</ul>
+<p>Los pesos P1, P2, P3 son muy grandes en orden decreciente (P1 ≫ P2 ≫ P3).</p>`,
+      },
+      {
+        heading: 'Paso 6 — Resolver P1 y P2 primero (sustitución)',
+        body: `<p>Como P1 y P2 son prioritarias, buscamos cumplirlas <strong>sin desviación</strong>: d1⁻ = d1⁺ = d2⁻ = d2⁺ = 0.</p>
+<p>Quedan dos ecuaciones:</p>
+<ul class="calc-list">
+<li>30x + 50y = 2 200 … (1)</li>
+<li>2x + 4y = 160 … (2)</li>
+</ul>
+<p>Simplificamos dividiendo (1) entre 10 y (2) entre 2:</p>
+<ul class="calc-list">
+<li>3x + 5y = 220</li>
+<li>x + 2y = 80</li>
+</ul>`,
+      },
+      {
+        heading: 'Paso 7 — Despeje de x e y',
+        body: `<p>De <strong>x + 2y = 80</strong> despejamos:</p>
+<p><strong>x = 80 − 2y</strong></p>
+<p>Sustituimos en <strong>3x + 5y = 220</strong>:</p>
+<ul class="calc-list">
+<li>3(80 − 2y) + 5y = 220</li>
+<li>240 − 6y + 5y = 220</li>
+<li>240 − y = 220</li>
+<li><strong>y = 20</strong></li>
+</ul>
+<p>Entonces <strong>x = 80 − 2(20) = 40</strong></p>
+<p><strong>Plan provisional:</strong> 40 lotes de pan y 20 de repostería.</p>`,
+      },
+      {
+        heading: 'Paso 8 — Verificar Meta 1 (ganancia)',
+        body: `<p>Ganancia = 30(40) + 50(20) = 1 200 + 1 000 = <strong>$2 200</strong></p>
+<ul class="calc-list">
+<li>Meta: $2 200 · Resultado: $2 200</li>
+<li>d1⁻ = 0 · d1⁺ = 0 ✓</li>
+</ul>
+<p>La meta financiera se cumple exactamente.</p>`,
+      },
+      {
+        heading: 'Paso 9 — Verificar Meta 2 (horas)',
+        body: `<p>Horas = 2(40) + 4(20) = 80 + 80 = <strong>160 h</strong></p>
+<ul class="calc-list">
+<li>Meta: 160 h exactas · Resultado: 160 h</li>
+<li>d2⁻ = 0 · d2⁺ = 0 ✓</li>
+</ul>
+<p>No hay horas faltantes ni extras: se respeta el acuerdo con el personal.</p>`,
+      },
+      {
+        heading: 'Paso 10 — Evaluar Meta 3 (energía)',
+        body: `<p>Energía = 5(40) + 8(20) = 200 + 160 = <strong>360 kWh</strong></p>
+<p>Meta ambiental: máximo 300 kWh → nos pasamos por <strong>60 kWh</strong>.</p>
+<p>En la ecuación: 5x + 8y + d3⁻ − d3⁺ = 300</p>
+<p>360 + 0 − d3⁺ = 300 → <strong>d3⁺ = 60</strong></p>
+<p>Es el “precio” del compromiso: cumplir P1 y P2 obliga a exceder la meta ambiental.</p>`,
+      },
+      {
+        heading: 'Paso 11 — Valor de Z y conclusión del modelo',
+        body: `<p>Con d1⁻ = d2⁻ = d2⁺ = 0 y d3⁺ = 60:</p>
+<p><strong>Min Z = P1(0) + P2(0) + P3(60) = 60·P3</strong></p>
+<p>No existe otra producción que cumpla P1 y P2 con menor exceso de energía. La solución del modelo por metas es <strong>x* = 40, y* = 20</strong>.</p>`,
+      },
     ],
     decision: {
       title: 'Decisión de producción',
-      text: 'Producir 40 lotes de pan y 20 de repostería cumple rentabilidad y acuerdo laboral, pero excede la meta ambiental en 60 kWh. La gerencia debe negociar con la municipalidad o invertir en eficiencia energética; las metas financiera y laboral tienen prioridad absoluta.',
-      metrics: [{ label: 'x* pan', value: '40 lotes' }, { label: 'y* repostería', value: '20 lotes' }, { label: 'Exceso energía', value: '+60 kWh' }],
+      text: 'Producir 40 lotes de pan y 20 de repostería cumple rentabilidad ($2 200) y acuerdo laboral (160 h), pero excede la meta ambiental en 60 kWh. La gerencia debe negociar con la municipalidad, invertir en hornos eficientes o aceptar el exceso; las metas P1 y P2 tienen prioridad absoluta sobre P3.',
+      metrics: [{ label: 'x* pan', value: '40 lotes' }, { label: 'y* repostería', value: '20 lotes' }, { label: 'Exceso energía d3⁺', value: '60 kWh' }],
     },
   },
 
   'prog-nonlinear': {
     title: 'Programación No Lineal',
     subtitle: 'Fábrica — Productos A y B',
-    context: `Una fábrica produce dos productos con ingresos decrecientes por elasticidad de demanda. El beneficio Z combina ingresos cuadráticos menos costos lineales. Se maximiza sujeto a restricciones de horas máquina y materia prima.`,
+    context: `Una fábrica produce productos A (x unidades) y B (y unidades). Los ingresos tienen **rendimientos decrecientes** (curvas cuadráticas), pero los costos son lineales. Se busca el beneficio máximo respetando horas de máquina y materia prima. Es programación **no lineal** porque la función objetivo tiene términos x² e y².`,
     steps: [
-      { heading: 'Función objetivo', body: `<p>Max Z = 35x − x² + 42y − 2y²</p><p>(derivado de ingresos 40x−x², 50y−2y² menos costos 5x, 8y)</p>` },
-      { heading: 'Restricciones', body: `<ul class="calc-list"><li>2x + 3y ≤ 120</li><li>x + 2y ≤ 80</li><li>x, y ≥ 0</li></ul>` },
-      { heading: 'Derivadas parciales = 0', body: `<p>∂Z/∂x = 35 − 2x = 0 → x = 17.5</p><p>∂Z/∂y = 42 − 4y = 0 → y = 10.5</p>` },
-      { heading: 'Factibilidad y Z*', body: `<p>2(17.5) + 3(10.5) = 66.5 ≤ 120 ✓ · 17.5 + 2(10.5) = 38.5 ≤ 80 ✓</p><p>Z* = 35(17.5) − 17.5² + 42(10.5) − 2(10.5)² = <strong>$526.75</strong></p>` },
+      {
+        heading: 'Paso 0 — Entender el enunciado',
+        body: `<ul class="calc-list">
+<li><strong>Ingreso A:</strong> 40x − x² (dólares)</li>
+<li><strong>Ingreso B:</strong> 50y − 2y² (dólares)</li>
+<li><strong>Costo A:</strong> 5x · <strong>Costo B:</strong> 8y</li>
+<li><strong>Restricción 1:</strong> 2x + 3y ≤ 120 (horas máquina)</li>
+<li><strong>Restricción 2:</strong> x + 2y ≤ 80 (materia prima)</li>
+</ul>
+<p>Variables: x, y ≥ 0 (cantidades a producir).</p>`,
+      },
+      {
+        heading: 'Paso 1 — Construir la función objetivo',
+        body: `<p><strong>Beneficio = Ingreso − Costo</strong> para cada producto:</p>
+<ul class="calc-list">
+<li>Beneficio A: (40x − x²) − 5x = <strong>35x − x²</strong></li>
+<li>Beneficio B: (50y − 2y²) − 8y = <strong>42y − 2y²</strong></li>
+</ul>
+<p><strong>Max Z = 35x − x² + 42y − 2y²</strong></p>
+<p>Esta Z es la ganancia total en dólares. Los términos cuadráticos (−x², −2y²) modelan que vender mucho baja el precio unitario efectivo.</p>`,
+      },
+      {
+        heading: 'Paso 2 — Restricciones del modelo',
+        body: `<ul class="calc-list">
+<li>2x + 3y ≤ 120 &nbsp;(horas de máquina disponibles)</li>
+<li>x + 2y ≤ 80 &nbsp;(materia prima disponible)</li>
+<li>x ≥ 0, y ≥ 0 &nbsp;(no se produce cantidades negativas)</li>
+</ul>
+<p>En conjunto definen la <strong>región factible</strong> (polígono en el plano x-y).</p>`,
+      },
+      {
+        heading: 'Paso 3 — Método: punto crítico sin restricciones',
+        body: `<p>Primero maximizamos Z como si no hubiera límites. Para funciones suaves, el máximo interior cumple <strong>derivadas parciales = 0</strong>.</p>
+<p>Separar Z en partes:</p>
+<ul class="calc-list">
+<li>f(x) = 35x − x² → f′(x) = 35 − 2x</li>
+<li>g(y) = 42y − 2y² → g′(y) = 42 − 4y</li>
+</ul>`,
+      },
+      {
+        heading: 'Paso 4 — Resolver ∂Z/∂x = 0',
+        body: `<ul class="calc-list">
+<li>35 − 2x = 0</li>
+<li>2x = 35</li>
+<li><strong>x = 17.5</strong></li>
+</ul>
+<p>Interpretación: sin restricciones, lo óptimo sería producir 17.5 unidades de A.</p>`,
+      },
+      {
+        heading: 'Paso 5 — Resolver ∂Z/∂y = 0',
+        body: `<ul class="calc-list">
+<li>42 − 4y = 0</li>
+<li>4y = 42</li>
+<li><strong>y = 10.5</strong></li>
+</ul>
+<p>Punto crítico candidato: <strong>(17.5 , 10.5)</strong></p>`,
+      },
+      {
+        heading: 'Paso 6 — Verificar factibilidad (restricción 1)',
+        body: `<p>2x + 3y ≤ 120</p>
+<ul class="calc-list">
+<li>2(17.5) + 3(10.5) = 35 + 31.5 = <strong>66.5</strong></li>
+<li>66.5 ≤ 120 ✓</li>
+</ul>
+<p>Usamos 66.5 de 120 horas → hay <strong>holgura</strong> de 53.5 h.</p>`,
+      },
+      {
+        heading: 'Paso 7 — Verificar factibilidad (restricción 2)',
+        body: `<p>x + 2y ≤ 80</p>
+<ul class="calc-list">
+<li>17.5 + 2(10.5) = 17.5 + 21 = <strong>38.5</strong></li>
+<li>38.5 ≤ 80 ✓</li>
+</ul>
+<p>El punto crítico está <strong>dentro</strong> de la región factible → no choca con ningún límite.</p>`,
+      },
+      {
+        heading: 'Paso 8 — Calcular Z* (beneficio máximo)',
+        body: `<p>Sustituimos x = 17.5, y = 10.5 en Z:</p>
+<ul class="calc-list">
+<li>35(17.5) = 612.50</li>
+<li>−(17.5)² = −306.25</li>
+<li>42(10.5) = 441.00</li>
+<li>−2(10.5)² = −220.50</li>
+</ul>
+<p><strong>Z* = 612.50 − 306.25 + 441.00 − 220.50 = $526.75</strong></p>`,
+      },
+      {
+        heading: 'Paso 9 — Interpretación gerencial',
+        body: `<table class="data-table"><thead><tr><th>Concepto</th><th>Valor</th><th>Significado</th></tr></thead>
+<tbody>
+<tr><td>x* (Producto A)</td><td>17.5 u</td><td>Cantidad óptima de A</td></tr>
+<tr><td>y* (Producto B)</td><td>10.5 u</td><td>Cantidad óptima de B</td></tr>
+<tr><td>Horas usadas</td><td>66.5 / 120</td><td>Máquina no saturada (55% aprox.)</td></tr>
+<tr><td>Materia prima</td><td>38.5 / 80</td><td>Holgura para crecer</td></tr>
+<tr><td>Z*</td><td>$526.75</td><td>Beneficio máximo alcanzable</td></tr>
+</tbody></table>
+<p>Como el óptimo sin restricciones ya es factible, <strong>no hace falta</strong> buscar en las esquinas del polígono: (17.5, 10.5) es la solución global.</p>`,
+      },
     ],
     decision: {
       title: 'Decisión de producción',
-      text: 'Producir 17.5 unidades de A y 10.5 de B maximiza el beneficio ($526.75). Los recursos no están saturados (66.5/120 h, 38.5/80 materia prima), indicando holgura para expansión si crece la demanda.',
+      text: 'Producir 17.5 unidades de A y 10.5 de B maximiza el beneficio ($526.75). Los recursos no están al 100%: la fábrica podría crecer en volumen antes de topar con horas o materia prima. Si solo se permitieran enteros, habría que evaluar puntos (17,10), (18,10), etc. — este ejercicio admite fracciones.',
       metrics: [{ label: 'x*', value: '17.5 u' }, { label: 'y*', value: '10.5 u' }, { label: 'Z*', value: '$526.75' }],
     },
   },
@@ -457,18 +786,115 @@ const SOLUTIONS = {
   'prog-integer': {
     title: 'Programación Entera Pura',
     subtitle: 'Taller textil — Camisas y pantalones',
-    context: `Un taller textil confecciona camisas y pantalones completos. Cada prenda consume tela, tiempo de costura y botones. Las cantidades deben ser enteras. El objetivo es maximizar la ganancia semanal respetando la disponibilidad de recursos.`,
+    context: `Un taller textil confecciona **camisas completas** y **pantalones completos**. No se pueden hacer medias prendas: las cantidades deben ser **números enteros**. Hay tres recursos limitados (tela, tiempo, botones). Objetivo: **maximizar ganancia semanal** sin pasarse de lo disponible.`,
     steps: [
-      { heading: 'Variables', body: `<p>x₁ = camisas · x₂ = pantalones (enteros ≥ 0)</p>` },
-      { heading: 'Función objetivo', body: `<p><strong>Max Z = 60x₁ + 50x₂</strong></p>` },
-      { heading: 'Restricciones', body: `<ul class="calc-list"><li>x₁ + 2x₂ ≤ 10 (tela)</li><li>2x₁ + x₂ ≤ 11 (tiempo)</li><li>x₁ + x₂ ≤ 9 (botones)</li></ul>` },
-      { heading: 'Vértices factibles', body: `<p>(0,0)→$0 · (5,0)→$330 · (0,5)→$250 · <strong>(4,3)→$390</strong></p>` },
-      { heading: 'Intersección R1 ∩ R2 (tela y tiempo)', body: `<p>x₂ = 11 − 2x₁ · x₁ + 2(11−2x₁) = 10 → x₁ = 4, x₂ = 3</p><p>Botones: 4 + 3 = 7 ≤ 9 ✓ · Punto entero → solución óptima directa.</p>` },
-      { heading: 'Verificación (4, 3)', body: `<ul class="calc-list"><li>Tela: 4 + 6 = 10 ≤ 10 ✓ (activa)</li><li>Tiempo: 8 + 3 = 11 ≤ 11 ✓ (activa)</li><li>Botones: 7 ≤ 9 ✓ (holgura 2 cajas)</li></ul>` },
+      {
+        heading: 'Paso 0 — Datos del taller',
+        body: `<table class="data-table"><thead><tr><th>Recurso</th><th>Por camisa</th><th>Por pantalón</th><th>Disponible</th></tr></thead>
+<tbody>
+<tr><td>Tela (m)</td><td>1</td><td>2</td><td>10</td></tr>
+<tr><td>Tiempo (h)</td><td>2</td><td>1</td><td>11</td></tr>
+<tr><td>Botones (cajas)</td><td>1</td><td>1</td><td>9</td></tr>
+<tr><td>Ganancia</td><td>$60</td><td>$50</td><td>—</td></tr>
+</tbody></table>
+<p>Ejemplo: 1 camisa usa 1 m tela, 2 h y 1 caja de botones y deja $60.</p>`,
+      },
+      {
+        heading: 'Paso 1 — Variables de decisión',
+        body: `<ul class="calc-list">
+<li><strong>x₁</strong> = número de camisas a producir esta semana (entero ≥ 0)</li>
+<li><strong>x₂</strong> = número de pantalones a producir (entero ≥ 0)</li>
+</ul>`,
+      },
+      {
+        heading: 'Paso 2 — Función objetivo',
+        body: `<p><strong>Max Z = 60x₁ + 50x₂</strong></p>
+<p>Cada camisa aporta $60; cada pantalón $50. Queremos la combinación entera que más dinero deje.</p>`,
+      },
+      {
+        heading: 'Paso 3 — Restricciones',
+        body: `<ul class="calc-list">
+<li><strong>Tela:</strong> x₁ + 2x₂ ≤ 10</li>
+<li><strong>Tiempo:</strong> 2x₁ + x₂ ≤ 11</li>
+<li><strong>Botones:</strong> x₁ + x₂ ≤ 9</li>
+<li><strong>Enteridad:</strong> x₁, x₂ ∈ {0, 1, 2, 3, …}</li>
+</ul>
+<p>Las tres primeras son lineales; la enteridad es lo que distingue este modelo de programación lineal continua.</p>`,
+      },
+      {
+        heading: 'Paso 4 — Rectas frontera (igualdades)',
+        body: `<p>Para graficar, usamos las igualdades de cada restricción:</p>
+<ul class="calc-list">
+<li><strong>R1 (tela):</strong> x₁ + 2x₂ = 10 → pasa por (10, 0) y (0, 5)</li>
+<li><strong>R2 (tiempo):</strong> 2x₁ + x₂ = 11 → pasa por (5.5, 0) y (0, 11)</li>
+<li><strong>R3 (botones):</strong> x₁ + x₂ = 9 → pasa por (9, 0) y (0, 9)</li>
+</ul>
+<p>La región factible es el polígono donde se cumplen las tres desigualdades simultáneamente (primer cuadrante).</p>`,
+      },
+      {
+        heading: 'Paso 5 — Vértices candidatos de la región',
+        body: `<p>En programación lineal, el óptimo continuo está en un <strong>vértice</strong>. Calculamos intersecciones factibles:</p>
+<ul class="calc-list">
+<li><strong>(0, 0):</strong> origen · Z = $0</li>
+<li><strong>(5.5, 0):</strong> R2 con eje x · cumple R1 y R3 · Z = 60(5.5) = $330</li>
+<li><strong>(0, 5):</strong> R1 con eje y · cumple R2 y R3 · Z = 50(5) = $250</li>
+<li><strong>(4, 3):</strong> cruce R1 ∩ R2 (ver paso 6) · Z = $390</li>
+</ul>
+<p>El vértice con mayor Z continuo es (4, 3).</p>`,
+      },
+      {
+        heading: 'Paso 6 — Intersección R1 ∩ R2 (tela y tiempo)',
+        body: `<p>Resolvemos el sistema:</p>
+<ul class="calc-list">
+<li>x₁ + 2x₂ = 10 … (R1)</li>
+<li>2x₁ + x₂ = 11 … (R2)</li>
+</ul>
+<p>De R2: <strong>x₂ = 11 − 2x₁</strong></p>
+<p>Sustituimos en R1:</p>
+<ul class="calc-list">
+<li>x₁ + 2(11 − 2x₁) = 10</li>
+<li>x₁ + 22 − 4x₁ = 10</li>
+<li>−3x₁ = −12</li>
+<li><strong>x₁ = 4</strong></li>
+</ul>
+<p>Entonces x₂ = 11 − 2(4) = <strong>3</strong> → punto <strong>(4, 3)</strong></p>
+<p>Verificamos botones: 4 + 3 = 7 ≤ 9 ✓ (factible)</p>`,
+      },
+      {
+        heading: 'Paso 7 — Evaluar Z en cada vértice',
+        body: `<table class="data-table"><thead><tr><th>Vértice (x₁, x₂)</th><th>Cálculo Z = 60x₁ + 50x₂</th><th>Ganancia</th></tr></thead>
+<tbody>
+<tr><td>(0, 0)</td><td>0</td><td>$0</td></tr>
+<tr><td>(5.5, 0)</td><td>60(5.5) = 330</td><td>$330</td></tr>
+<tr><td>(0, 5)</td><td>50(5) = 250</td><td>$250</td></tr>
+<tr><td><strong>(4, 3)</strong></td><td>60(4) + 50(3) = 240 + 150</td><td><strong>$390</strong></td></tr>
+</tbody></table>
+<p>(4, 3) da la mayor ganancia.</p>`,
+      },
+      {
+        heading: 'Paso 8 — ¿Por qué no hay que redondear?',
+        body: `<p>En programación entera, si el mejor vértice del relajamiento lineal ya tiene coordenadas <strong>enteras</strong>, ese punto es automáticamente óptimo entero.</p>
+<p>(4, 3) tiene x₁ = 4 y x₂ = 3 (ambos enteros) → <strong>solución óptima directa</strong>, sin branch-and-bound ni redondeo.</p>
+<p>Si el vértice fuera (4.2, 2.8), habría que probar combinaciones enteras cercanas.</p>`,
+      },
+      {
+        heading: 'Paso 9 — Verificación completa de (4, 3)',
+        body: `<ul class="calc-list">
+<li><strong>Tela:</strong> 4 + 2(3) = 4 + 6 = 10 ≤ 10 ✓ (activa al 100% — cuello de botella)</li>
+<li><strong>Tiempo:</strong> 2(4) + 3 = 8 + 3 = 11 ≤ 11 ✓ (activa al 100%)</li>
+<li><strong>Botones:</strong> 4 + 3 = 7 ≤ 9 ✓ (sobran 2 cajas — holgura)</li>
+<li><strong>Ganancia:</strong> Z = 60(4) + 50(3) = <strong>$390/semana</strong></li>
+</ul>`,
+      },
+      {
+        heading: 'Paso 10 — Interpretación para el taller',
+        body: `<p>Producir <strong>4 camisas y 3 pantalones</strong> agota tela y tiempo: esos son los recursos que limitan la producción. Los botones no limitan (quedan 2 cajas sin usar).</p>
+<p>Si el taller quisiera más ganancia, necesitaría más tela o más horas de costura, no más botones.</p>`,
+      },
     ],
     decision: {
       title: 'Decisión de planificación semanal',
-      text: 'Producir 4 camisas y 3 pantalones genera $390/semana. Tela y tiempo son cuellos de botella (100% utilizados); botones tienen holgura. No conviene redondear otro vértice: (4,3) ya es entero y óptimo.',
+      text: 'Producir 4 camisas y 3 pantalones genera $390/semana, el máximo posible con los recursos actuales. Tela y tiempo son cuellos de botella al 100%; botones tienen holgura de 2 cajas. Plan operativo: asignar costura y tela a esa mezcla antes de considerar otras combinaciones.',
       metrics: [{ label: 'Camisas x₁*', value: '4' }, { label: 'Pantalones x₂*', value: '3' }, { label: 'Ganancia Z*', value: '$390' }],
     },
   },

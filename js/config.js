@@ -34,6 +34,12 @@ const PORTFOLIO_CONFIG = {
       description: 'Video propio: Dijkstra (ruta más corta) y Kruskal (árbol mínimo) en la red logística.',
       channel: 'Jurguen Salas Herrera',
     },
+    transport: {
+      id: 'tSfoZYgR6NI',
+      title: 'Explicación paso a paso — Transporte y asignación',
+      description: 'Video propio: método de Vogel, salto de piedra y asignación de camiones (Limón).',
+      channel: 'Jurguen Salas Herrera',
+    },
   },
 
   
