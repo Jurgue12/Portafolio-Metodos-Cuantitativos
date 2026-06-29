@@ -109,34 +109,314 @@ const SOLUTIONS = {
 
   'trans-vogel': {
     title: 'Modelo de Transporte — Vogel',
-    subtitle: 'Distribución de mercancía en Limón',
-    context: `Una empresa distribuidora almacena mercancía en bodegas de Moín, Cieneguita y Liverpool y debe abastecer Limón Centro, Siquirres, Guápiles y Talamanca. El objetivo es maximizar la ganancia por tonelada transportada (₡ miles/t), balanceando oferta (300 t) y demanda (300 t).`,
+    subtitle: 'Distribución de mercancía en Limón (maximización)',
+    context: `Una empresa distribuidora en Limón recibe importaciones en la zona portuaria y debe repartir mercancía desde tres bodegas (Moín, Cieneguita y Liverpool) hacia cuatro centros de distribución (Limón Centro, Siquirres, Guápiles y Talamanca). Cada celda de la matriz indica la ganancia en miles de colones (₡) por cada tonelada enviada por esa ruta. El objetivo es **maximizar** la ganancia total respetando la capacidad de cada bodega y la demanda de cada centro.`,
     steps: [
-      { heading: 'Balanceo', body: `<p>Oferta: 120 + 100 + 80 = 300 t · Demanda: 70 + 90 + 80 + 60 = 300 t ✓</p>` },
-      { heading: 'Método de Vogel (maximización)', body: `<p>Se transforma ganancia a costo de oportunidad y se asignan celdas con mayor ganancia:</p><ul class="calc-list"><li>Moín → Limón C.: 70 t</li><li>Moín → Siquirres: 50 t</li><li>Cieneguita → Siquirres: 40 t, Guápiles: 60 t</li><li>Liverpool → Guápiles: 20 t, Talamanca: 60 t</li></ul>` },
-      { heading: 'Ganancia total', body: `<p>Z = 16(70) + 11(50) + 12(40) + 9(60) + 10(20) + 7(60) = <strong>3 310</strong> miles → <strong>₡3 310 000</strong></p>` },
-      { heading: 'Salto de piedra', body: `<p>Todas las celdas vacías dan Δ = 0 → solución óptima confirmada.</p>` },
+      {
+        heading: 'Paso 0 — Entender el problema',
+        body: `<p>Antes de calcular, identificamos los elementos del modelo:</p>
+<ul class="calc-list">
+<li><strong>Orígenes (bodegas):</strong> O₁ Moín, O₂ Cieneguita, O₃ Liverpool</li>
+<li><strong>Destinos (centros):</strong> D₁ Limón Centro, D₂ Siquirres, D₃ Guápiles, D₄ Talamanca</li>
+<li><strong>Decisión:</strong> cuántas toneladas enviar de cada bodega a cada centro</li>
+<li><strong>Meta:</strong> maximizar ganancia total (no minimizar costo)</li>
+</ul>
+<p>Los números dentro de la matriz son <strong>ganancia por tonelada</strong>, expresada en miles de colones. Por ejemplo, 16 significa ₡16 000 por tonelada de Moín hacia Limón Centro.</p>`,
+      },
+      {
+        heading: 'Paso 1 — Matriz de ganancias (datos del ejercicio)',
+        body: `<table class="data-table"><thead><tr><th>Origen / Destino</th><th>Limón C.</th><th>Siquirres</th><th>Guápiles</th><th>Talamanca</th><th>Oferta</th></tr></thead>
+<tbody>
+<tr><td><strong>Moín</strong></td><td>16</td><td>11</td><td>8</td><td>5</td><td>120 t</td></tr>
+<tr><td><strong>Cieneguita</strong></td><td>15</td><td>12</td><td>9</td><td>6</td><td>100 t</td></tr>
+<tr><td><strong>Liverpool</strong></td><td>14</td><td>13</td><td>10</td><td>7</td><td>80 t</td></tr>
+<tr><td><strong>Demanda</strong></td><td>70 t</td><td>90 t</td><td>80 t</td><td>60 t</td><td>300 t</td></tr>
+</tbody></table>
+<p>Lectura de ejemplo: enviar 1 tonelada de Moín a Guápiles genera ganancia 8 (₡8 000). Enviar desde Liverpool a Talamanca genera 7 (₡7 000).</p>`,
+      },
+      {
+        heading: 'Paso 2 — Variables de decisión',
+        body: `<p>Definimos <strong>X<sub>ij</sub></strong> = toneladas enviadas del origen <em>i</em> al destino <em>j</em>.</p>
+<ul class="calc-list">
+<li>X₁₁ = toneladas Moín → Limón Centro</li>
+<li>X₁₂ = toneladas Moín → Siquirres</li>
+<li>X₁₃ = toneladas Moín → Guápiles</li>
+<li>X₁₄ = toneladas Moín → Talamanca</li>
+<li>… y así para Cieneguita (X₂ⱼ) y Liverpool (X₃ⱼ)</li>
+</ul>
+<p>Hay 3 × 4 = <strong>12 variables</strong>. Cada una debe ser ≥ 0.</p>`,
+      },
+      {
+        heading: 'Paso 3 — Función objetivo (maximizar Z)',
+        body: `<p>Sumamos ganancia × toneladas en cada ruta usada:</p>
+<p><strong>Max Z =</strong> 16X₁₁ + 11X₁₂ + 8X₁₃ + 5X₁₄<br>
++ 15X₂₁ + 12X₂₂ + 9X₂₃ + 6X₂₄<br>
++ 14X₃₁ + 13X₃₂ + 10X₃₃ + 7X₃₄</p>
+<p><strong>Z</strong> = ganancia total en <strong>miles de colones</strong>. Si Z = 3 310, la ganancia real es <strong>₡3 310 000</strong>.</p>`,
+      },
+      {
+        heading: 'Paso 4 — Restricciones de oferta (bodegas)',
+        body: `<p>Cada bodega no puede enviar más de lo que tiene:</p>
+<ul class="calc-list">
+<li><strong>Moín:</strong> X₁₁ + X₁₂ + X₁₃ + X₁₄ = 120</li>
+<li><strong>Cieneguita:</strong> X₂₁ + X₂₂ + X₂₃ + X₂₄ = 100</li>
+<li><strong>Liverpool:</strong> X₃₁ + X₃₂ + X₃₃ + X₃₄ = 80</li>
+</ul>`,
+      },
+      {
+        heading: 'Paso 5 — Restricciones de demanda (centros)',
+        body: `<p>Cada centro debe recibir exactamente lo que necesita:</p>
+<ul class="calc-list">
+<li><strong>Limón Centro:</strong> X₁₁ + X₂₁ + X₃₁ = 70</li>
+<li><strong>Siquirres:</strong> X₁₂ + X₂₂ + X₃₂ = 90</li>
+<li><strong>Guápiles:</strong> X₁₃ + X₂₃ + X₃₃ = 80</li>
+<li><strong>Talamanca:</strong> X₁₄ + X₂₄ + X₃₄ = 60</li>
+</ul>`,
+      },
+      {
+        heading: 'Paso 6 — Verificar balanceo',
+        body: `<p>El modelo debe estar <strong>balanceado</strong>: oferta total = demanda total.</p>
+<ul class="calc-list">
+<li>Oferta: 120 + 100 + 80 = <strong>300 t</strong></li>
+<li>Demanda: 70 + 90 + 80 + 60 = <strong>300 t</strong></li>
+</ul>
+<p>300 = 300 ✓ No hace falta agregar filas ni columnas ficticias. Podemos aplicar Vogel directamente.</p>`,
+      },
+      {
+        heading: 'Paso 7 — Tabla de costo de oportunidad',
+        body: `<p>Para maximizar, comparamos cuánto <strong>perdemos</strong> al no elegir la mejor ganancia de cada fila. En cada fila restamos el máximo de esa fila a cada celda:</p>
+<p><strong>Fila Moín</strong> (máx = 16): 16−16=0, 16−11=5, 16−8=8, 16−5=11</p>
+<p><strong>Fila Cieneguita</strong> (máx = 15): 0, 4, 7, 10 · <strong>Fila Liverpool</strong> (máx = 14): 2, 5, 6, 9</p>
+<table class="data-table"><thead><tr><th></th><th>Limón C.</th><th>Siquirres</th><th>Guápiles</th><th>Talamanca</th></tr></thead>
+<tbody>
+<tr><td>Moín</td><td>0</td><td>5</td><td>8</td><td>11</td></tr>
+<tr><td>Cieneguita</td><td>1</td><td>4</td><td>7</td><td>10</td></tr>
+<tr><td>Liverpool</td><td>2</td><td>5</td><td>6</td><td>9</td></tr>
+</tbody></table>
+<p><strong>Regla práctica:</strong> número más bajo = ruta más conveniente en esa fila. Empezamos donde la ganancia original es mayor (celda 16) o el costo de oportunidad es 0.</p>`,
+      },
+      {
+        heading: 'Paso 8 — Vogel: asignación 1 (Moín → Limón Centro)',
+        body: `<p>La celda más rentable es <strong>Moín → Limón Centro (ganancia 16)</strong>.</p>
+<ul class="calc-list">
+<li>Oferta Moín = 120 t · Demanda Limón C. = 70 t</li>
+<li>Asignamos <strong>min(120, 70) = 70 t</strong> → X₁₁ = 70</li>
+<li>Oferta restante Moín: 120 − 70 = <strong>50 t</strong></li>
+<li>Demanda restante Limón C.: 70 − 70 = <strong>0 t</strong> (columna cerrada)</li>
+</ul>
+<p>Limón Centro ya está satisfecho; esa columna no recibe más envíos.</p>`,
+      },
+      {
+        heading: 'Paso 9 — Vogel: asignación 2 (Moín → Siquirres)',
+        body: `<p>Seguimos en la fila de Moín (aún quedan 50 t). El siguiente menor costo de oportunidad es <strong>5</strong> → ruta Moín → Siquirres (ganancia 11).</p>
+<ul class="calc-list">
+<li>Oferta Moín = 50 t · Demanda Siquirres = 90 t</li>
+<li>Asignamos <strong>min(50, 90) = 50 t</strong> → X₁₂ = 50</li>
+<li>Oferta Moín: 50 − 50 = <strong>0</strong> (fila Moín cerrada)</li>
+<li>Demanda Siquirres: 90 − 50 = <strong>40 t</strong> pendientes</li>
+</ul>
+<p>Parcial: Moín envió 70 t a Limón C. y 50 t a Siquirres (120 t en total).</p>`,
+      },
+      {
+        heading: 'Paso 10 — Vogel: asignación 3 (Cieneguita → Siquirres)',
+        body: `<p>Siquirres aún necesita 40 t. En la fila Cieneguita, la mejor opción disponible es Siquirres (costo opp. 4, ganancia 12).</p>
+<ul class="calc-list">
+<li>Oferta Cieneguita = 100 t · Demanda Siquirres = 40 t</li>
+<li>Asignamos <strong>min(100, 40) = 40 t</strong> → X₂₂ = 40</li>
+<li>Oferta Cieneguita: 100 − 40 = <strong>60 t</strong></li>
+<li>Demanda Siquirres: 40 − 40 = <strong>0</strong> (columna cerrada)</li>
+</ul>`,
+      },
+      {
+        heading: 'Paso 11 — Vogel: asignación 4 (Cieneguita → Guápiles)',
+        body: `<ul class="calc-list">
+<li>Oferta Cieneguita = 60 t · Demanda Guápiles = 80 t</li>
+<li>Asignamos <strong>min(60, 80) = 60 t</strong> → X₂₃ = 60</li>
+<li>Oferta Cieneguita: 60 − 60 = <strong>0</strong> (fila cerrada)</li>
+<li>Demanda Guápiles: 80 − 60 = <strong>20 t</strong> pendientes</li>
+</ul>`,
+      },
+      {
+        heading: 'Paso 12 — Vogel: asignación 5 (Liverpool → Guápiles)',
+        body: `<ul class="calc-list">
+<li>Oferta Liverpool = 80 t · Demanda Guápiles = 20 t</li>
+<li>Asignamos <strong>min(80, 20) = 20 t</strong> → X₃₃ = 20</li>
+<li>Oferta Liverpool: 80 − 20 = <strong>60 t</strong></li>
+<li>Demanda Guápiles: 20 − 20 = <strong>0</strong></li>
+</ul>`,
+      },
+      {
+        heading: 'Paso 13 — Vogel: asignación 6 (Liverpool → Talamanca)',
+        body: `<ul class="calc-list">
+<li>Oferta Liverpool = 60 t · Demanda Talamanca = 60 t</li>
+<li>Asignamos <strong>min(60, 60) = 60 t</strong> → X₃₄ = 60</li>
+<li>Oferta y demanda restantes = <strong>0</strong> ✓</li>
+</ul>
+<p><strong>Tabla final de asignación (toneladas):</strong></p>
+<table class="data-table"><thead><tr><th></th><th>Limón C.</th><th>Siquirres</th><th>Guápiles</th><th>Talamanca</th><th>Oferta</th></tr></thead>
+<tbody>
+<tr><td>Moín</td><td><strong>70</strong></td><td><strong>50</strong></td><td>0</td><td>0</td><td>120</td></tr>
+<tr><td>Cieneguita</td><td>0</td><td><strong>40</strong></td><td><strong>60</strong></td><td>0</td><td>100</td></tr>
+<tr><td>Liverpool</td><td>0</td><td>0</td><td><strong>20</strong></td><td><strong>60</strong></td><td>80</td></tr>
+<tr><td>Demanda</td><td>70</td><td>90</td><td>80</td><td>60</td><td>300</td></tr>
+</tbody></table>`,
+      },
+      {
+        heading: 'Paso 14 — Calcular ganancia total Z',
+        body: `<p>Solo multiplicamos las celdas <strong>con toneladas asignadas</strong> por su ganancia unitaria:</p>
+<ul class="calc-list">
+<li>Moín → Limón C.: 16 × 70 = <strong>1 120</strong></li>
+<li>Moín → Siquirres: 11 × 50 = <strong>550</strong></li>
+<li>Cieneguita → Siquirres: 12 × 40 = <strong>480</strong></li>
+<li>Cieneguita → Guápiles: 9 × 60 = <strong>540</strong></li>
+<li>Liverpool → Guápiles: 10 × 20 = <strong>200</strong></li>
+<li>Liverpool → Talamanca: 7 × 60 = <strong>420</strong></li>
+</ul>
+<p><strong>Z = 1 120 + 550 + 480 + 540 + 200 + 420 = 3 310</strong> (miles)</p>
+<p>Ganancia total = <strong>₡3 310 000</strong></p>`,
+      },
+      {
+        heading: 'Paso 15 — Salto de piedra (¿es óptima?)',
+        body: `<p>Verificamos si Vogel ya dio la mejor solución:</p>
+<ul class="calc-list">
+<li>Celdas básicas: m + n − 1 = 3 + 4 − 1 = <strong>6</strong> ✓ (tenemos 6 rutas activas)</li>
+<li>Evaluamos una celda vacía, ej. X₁₃ (Moín → Guápiles, ganancia 8)</li>
+<li>Circuito: X₁₃(+) → X₁₂(−) → X₂₂(+) → X₂₃(−) → X₁₃</li>
+<li>Δ = +8 − 11 + 12 − 9 = <strong>0</strong></li>
+</ul>
+<p>Como Δ = 0, mover toneladas por esa ruta <strong>no mejora</strong> la ganancia. Al evaluar las demás celdas vacías también da 0 → la solución de Vogel está <strong>maximizada</strong>.</p>`,
+      },
     ],
     decision: {
       title: 'Decisión de distribución',
-      text: 'Priorizar envíos de Moín hacia Limón Centro y Siquirres (mayor ganancia/t). La solución Vogel es óptima; no hay mejora posible con salto de piedra. Gerencia puede implementar este plan de despacho con confianza.',
-      metrics: [{ label: 'Ganancia total', value: '₡3 310 000' }, { label: 'Optimalidad', value: 'Confirmada' }],
+      text: 'Enviar 70 t de Moín a Limón Centro y 50 t a Siquirres; 40 t de Cieneguita a Siquirres y 60 t a Guápiles; 20 t de Liverpool a Guápiles y 60 t a Talamanca. Es el plan que maximiza ganancia (₡3 310 000) sin violar capacidades ni demandas. Moín concentra las rutas más rentables; Liverpool cubre el remanente hacia Guápiles y Talamanca.',
+      metrics: [{ label: 'Ganancia total', value: '₡3 310 000' }, { label: 'Rutas activas', value: '6 de 12' }, { label: 'Optimalidad', value: 'Confirmada (Δ = 0)' }],
     },
   },
 
   'trans-assign': {
     title: 'Modelo de Asignación — Camiones',
-    subtitle: 'Rendimiento camión × ruta',
-    context: `La empresa cuenta con 4 camiones y 4 rutas hacia los centros de distribución. Cada camión tiene distinto rendimiento por ruta (combustible, acceso, carga). Se busca asignar un camión por ruta para maximizar el rendimiento operativo total.`,
+    subtitle: 'Rendimiento camión × ruta (maximización)',
+    context: `La misma empresa tiene 4 camiones y 4 rutas fijas (Limón Centro, Siquirres, Guápiles, Talamanca). Cada camión rinde distinto en cada ruta por terreno, combustible y carga. Solo puede ir **un camión por ruta** y **cada camión a una sola ruta**. Buscamos la asignación que **maximice el rendimiento total**.`,
     steps: [
-      { heading: 'Matriz de rendimiento', body: `<p>4 camiones × 4 rutas con valores de desempeño por combinación.</p>` },
-      { heading: 'Método húngaro (reducción filas/columnas)', body: `<p>Asignación óptima:</p><ul class="calc-list"><li>Camión 1 → Limón Centro (90)</li><li>Camión 2 → Siquirres (88)</li><li>Camión 3 → Guápiles (92)</li><li>Camión 4 → Talamanca (95)</li></ul>` },
-      { heading: 'Función objetivo', body: `<p>Z = 90 + 88 + 92 + 95 = <strong>365</strong></p>` },
+      {
+        heading: 'Paso 0 — Diferencia con transporte',
+        body: `<p>En <strong>transporte</strong> enviamos cantidades (toneladas) por muchas rutas a la vez. En <strong>asignación</strong> cada fila (camión) se asigna a <strong>exactamente una</strong> columna (ruta), y cada ruta recibe <strong>exactamente un</strong> camión. Es un problema de emparejar 4 camiones con 4 rutas.</p>`,
+      },
+      {
+        heading: 'Paso 1 — Matriz de rendimiento',
+        body: `<p>Cada número es el desempeño del camión en esa ruta (mayor = mejor):</p>
+<table class="data-table"><thead><tr><th>Camión / Ruta</th><th>Limón C.</th><th>Siquirres</th><th>Guápiles</th><th>Talamanca</th></tr></thead>
+<tbody>
+<tr><td><strong>Camión 1</strong></td><td>90</td><td>75</td><td>70</td><td>60</td></tr>
+<tr><td><strong>Camión 2</strong></td><td>80</td><td>88</td><td>82</td><td>74</td></tr>
+<tr><td><strong>Camión 3</strong></td><td>70</td><td>78</td><td>92</td><td>85</td></tr>
+<tr><td><strong>Camión 4</strong></td><td>75</td><td>80</td><td>86</td><td>95</td></tr>
+</tbody></table>
+<p>Ejemplo: Camión 3 en Guápiles rinde 92; Camión 4 en Talamanca rinde 95 (el valor más alto de toda la matriz).</p>`,
+      },
+      {
+        heading: 'Paso 2 — Variables de decisión',
+        body: `<p><strong>y<sub>ij</sub></strong> = 1 si el camión <em>i</em> se asigna a la ruta <em>j</em>; 0 si no.</p>
+<p>Hay 4 × 4 = 16 variables, pero solo <strong>4 valdrán 1</strong> (una por camión y una por ruta).</p>
+<p>Ejemplos: y₁₁ = 1 → Camión 1 va a Limón Centro · y₄₄ = 1 → Camión 4 va a Talamanca</p>`,
+      },
+      {
+        heading: 'Paso 3 — Función objetivo',
+        body: `<p><strong>Max Z =</strong> 90y₁₁ + 75y₁₂ + 70y₁₃ + 60y₁₄<br>
++ 80y₂₁ + 88y₂₂ + 82y₂₃ + 74y₂₄<br>
++ 70y₃₁ + 78y₃₂ + 92y₃₃ + 85y₃₄<br>
++ 75y₄₁ + 80y₄₂ + 86y₄₃ + 95y₄₄</p>
+<p>Como cada y<sub>ij</sub> es 0 o 1, al final Z será la <strong>suma de 4 rendimientos</strong> (uno por camión asignado).</p>`,
+      },
+      {
+        heading: 'Paso 4 — Restricciones',
+        body: `<p><strong>Cada camión a exactamente una ruta:</strong></p>
+<ul class="calc-list">
+<li>Camión 1: y₁₁ + y₁₂ + y₁₃ + y₁₄ = 1</li>
+<li>Camión 2: y₂₁ + y₂₂ + y₂₃ + y₂₄ = 1</li>
+<li>Camión 3: y₃₁ + y₃₂ + y₃₃ + y₃₄ = 1</li>
+<li>Camión 4: y₄₁ + y₄₂ + y₄₃ + y₄₄ = 1</li>
+</ul>
+<p><strong>Cada ruta con exactamente un camión:</strong></p>
+<ul class="calc-list">
+<li>Limón C.: y₁₁ + y₂₁ + y₃₁ + y₄₁ = 1</li>
+<li>Siquirres: y₁₂ + y₂₂ + y₃₂ + y₄₂ = 1</li>
+<li>Guápiles: y₁₃ + y₂₃ + y₃₃ + y₄₃ = 1</li>
+<li>Talamanca: y₁₄ + y₂₄ + y₃₄ + y₄₄ = 1</li>
+</ul>
+<p>Todas las y<sub>ij</sub> ∈ {0, 1}</p>`,
+      },
+      {
+        heading: 'Paso 5 — Convertir maximización (restar el máximo)',
+        body: `<p>Para aplicar el método de asignación estándar, restamos el <strong>valor máximo de la matriz (95)</strong> a cada celda. Esto transforma el problema en uno equivalente de minimización de “costo de oportunidad”:</p>
+<table class="data-table"><thead><tr><th></th><th>Limón C.</th><th>Siquirres</th><th>Guápiles</th><th>Talamanca</th></tr></thead>
+<tbody>
+<tr><td>Camión 1</td><td>95−90=5</td><td>20</td><td>25</td><td>35</td></tr>
+<tr><td>Camión 2</td><td>15</td><td>7</td><td>13</td><td>21</td></tr>
+<tr><td>Camión 3</td><td>25</td><td>17</td><td>3</td><td>10</td></tr>
+<tr><td>Camión 4</td><td>20</td><td>15</td><td>9</td><td>0</td></tr>
+</tbody></table>
+<p>Los ceros indican las mejores opciones relativas tras la transformación.</p>`,
+      },
+      {
+        heading: 'Paso 6 — Reducción por filas',
+        body: `<p>En cada fila restamos el <strong>mínimo de esa fila</strong> a todos sus valores (para crear más ceros):</p>
+<ul class="calc-list">
+<li>Fila Camión 1 (mín = 5): 5−5=0, 20−5=15, 25−5=20, 35−5=30</li>
+<li>Fila Camión 2 (mín = 7): 15−7=8, 0, 6, 14</li>
+<li>Fila Camión 3 (mín = 3): 22, 14, 0, 7</li>
+<li>Fila Camión 4 (mín = 0): ya tiene un 0, fila sin cambio</li>
+</ul>
+<table class="data-table"><thead><tr><th></th><th>Limón C.</th><th>Siquirres</th><th>Guápiles</th><th>Talamanca</th></tr></thead>
+<tbody>
+<tr><td>Camión 1</td><td>0</td><td>15</td><td>20</td><td>30</td></tr>
+<tr><td>Camión 2</td><td>8</td><td>0</td><td>6</td><td>14</td></tr>
+<tr><td>Camión 3</td><td>22</td><td>14</td><td>0</td><td>7</td></tr>
+<tr><td>Camión 4</td><td>20</td><td>15</td><td>9</td><td>0</td></tr>
+</tbody></table>`,
+      },
+      {
+        heading: 'Paso 7 — Reducción por columnas',
+        body: `<p>Repetimos el proceso por columnas (restar el mínimo de cada columna). Como ya hay ceros en cada columna, los mínimos columnares son 0 y la matriz <strong>no cambia</strong> en este ejercicio.</p>
+<p>Ya tenemos suficientes ceros para intentar una asignación completa.</p>`,
+      },
+      {
+        heading: 'Paso 8 — Asignación óptima (celdas en 0)',
+        body: `<p>Buscamos un conjunto de ceros donde <strong>cada fila y cada columna tenga exactamente un cero seleccionado</strong>:</p>
+<table class="data-table"><thead><tr><th>Asignación</th><th>Celda cero</th><th>Rendimiento original</th></tr></thead>
+<tbody>
+<tr><td>Camión 1 → Limón Centro</td><td>(1,1)</td><td><strong>90</strong></td></tr>
+<tr><td>Camión 2 → Siquirres</td><td>(2,2)</td><td><strong>88</strong></td></tr>
+<tr><td>Camión 3 → Guápiles</td><td>(3,3)</td><td><strong>92</strong></td></tr>
+<tr><td>Camión 4 → Talamanca</td><td>(4,4)</td><td><strong>95</strong></td></tr>
+</tbody></table>
+<p>Matriz de asignación (1 = asignado):</p>
+<table class="data-table"><thead><tr><th></th><th>Limón C.</th><th>Siquirres</th><th>Guápiles</th><th>Talamanca</th></tr></thead>
+<tbody>
+<tr><td>Camión 1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>Camión 2</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+<tr><td>Camión 3</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+<tr><td>Camión 4</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+</tbody></table>`,
+      },
+      {
+        heading: 'Paso 9 — Calcular Z y verificar',
+        body: `<p>Sumamos los rendimientos de las celdas asignadas en la <strong>matriz original</strong> (no la reducida):</p>
+<ul class="calc-list">
+<li>Camión 1 → Limón C.: <strong>90</strong></li>
+<li>Camión 2 → Siquirres: <strong>88</strong></li>
+<li>Camión 3 → Guápiles: <strong>92</strong></li>
+<li>Camión 4 → Talamanca: <strong>95</strong></li>
+</ul>
+<p><strong>Z = 90 + 88 + 92 + 95 = 365</strong></p>
+<p>Verificación rápida: ¿podría Camión 4 ir a Guápiles (86) en lugar de Talamanca? Sí, pero entonces otro camión perdería su mejor ruta y el total bajaría. Esta asignación en diagonal es la óptima del método.</p>`,
+      },
     ],
     decision: {
       title: 'Decisión operativa diaria',
-      text: 'Asignar cada camión a la ruta donde maximiza su rendimiento. Plan operativo: C1→Limón Centro, C2→Siquirres, C3→Guápiles, C4→Talamanca, con rendimiento total de 365 unidades.',
-      metrics: [{ label: 'Z máximo', value: '365' }, { label: 'Camiones', value: '4 asignados' }],
+      text: 'Plan de despacho: Camión 1 → Limón Centro, Camión 2 → Siquirres, Camión 3 → Guápiles, Camión 4 → Talamanca. Rendimiento total 365 unidades. Cada ruta queda cubierta con el camión que mejor desempeño tiene en ese tramo, sin repetir camiones ni dejar rutas sin asignar.',
+      metrics: [{ label: 'Z máximo', value: '365' }, { label: 'Camión estrella', value: 'C4 → Talamanca (95)' }, { label: 'Rutas cubiertas', value: '4 / 4' }],
     },
   },
 

@@ -178,6 +178,7 @@
     initExerciseUI();
     initExerciseLayout();
     initTopicVideos();
+    initStudentVideos();
     initHistoryVideoModal();
     initSolutionModal();
     initMarkov();
@@ -473,6 +474,79 @@
       ctx.insertAdjacentElement('afterend', block);
       if (window.observeReveal) window.observeReveal(block);
     });
+  }
+
+  function initStudentVideos() {
+    const videos = PORTFOLIO_CONFIG.studentVideos;
+    if (!videos) return;
+
+    const embedMode = useYoutubeEmbed();
+
+    Object.entries(videos).forEach(([key, video]) => {
+      if (!video?.id) return;
+
+      const ctx = document.getElementById('ctx-' + key);
+      if (!ctx) return;
+
+      const section = ctx.closest('.section') || ctx.parentElement;
+      const resolutionBlock = section?.querySelector('.exercise-resolution-block');
+      if (!resolutionBlock) return;
+
+      const panel = document.createElement('aside');
+      panel.className = 'topic-video-panel topic-video-panel-student reveal';
+      panel.innerHTML = buildStudentVideoPanel(video, key, embedMode);
+      resolutionBlock.insertAdjacentElement('afterend', panel);
+      if (window.observeReveal) window.observeReveal(panel);
+      else panel.classList.add('visible');
+
+      if (embedMode) {
+        panel.querySelectorAll('.yt-play-trigger').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const wrap = btn.closest('.topic-video-embed');
+            mountYoutubeEmbed(wrap, btn.dataset.videoId, btn.dataset.videoTitle, true);
+          });
+        });
+      }
+    });
+  }
+
+  function buildStudentVideoPanel(video, sectionKey, embedMode) {
+    const embed = embedMode !== false ? embedMode : useYoutubeEmbed();
+    const safeTitle = video.title.replace(/"/g, '&quot;');
+    const ytUrl = youtubeWatchUrl(video.id);
+    const player = embed
+      ? `<button type="button" class="yt-play-trigger"
+          data-video-id="${video.id}" data-video-title="${safeTitle}"
+          aria-label="Reproducir: ${safeTitle}">
+          <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="" loading="lazy">
+          <span class="yt-play-btn" aria-hidden="true">▶</span>
+          <span class="yt-play-label">Clic para reproducir aquí</span>
+        </button>`
+      : `<a href="${ytUrl}" target="_blank" rel="noopener noreferrer" class="yt-play-trigger yt-external"
+          aria-label="Ver en YouTube: ${safeTitle}">
+          <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="" loading="lazy">
+          <span class="yt-play-btn" aria-hidden="true">▶</span>
+          <span class="yt-play-label">Ver en YouTube (pestaña nueva)</span>
+        </a>`;
+
+    return `
+      <div class="topic-video-header">
+        <span class="topic-video-tag student-video-tag">▶ Mi explicación</span>
+        <h3>${video.title}</h3>
+        ${video.description ? `<p class="topic-video-history">${video.description}</p>` : ''}
+      </div>
+      <div class="topic-video-grid">
+        <article class="topic-video-item">
+          <div class="topic-video-embed" id="tve-student-${sectionKey}">
+            ${player}
+          </div>
+          <div class="topic-video-meta">
+            <h4>${video.title}</h4>
+            <p>${video.channel || 'Jurguen Salas Herrera'} · Video propio del portafolio</p>
+            <a class="topic-video-yt-link" href="${ytUrl}" target="_blank" rel="noopener noreferrer">Abrir en YouTube ↗</a>
+          </div>
+        </article>
+      </div>`;
   }
 
   function initTopicVideos() {

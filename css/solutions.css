@@ -1571,6 +1571,15 @@ body.presentation-mode .presentation-bar {
   color: var(--accent);
 }
 
+.student-video-tag {
+  color: var(--gold);
+}
+
+.topic-video-panel-student {
+  border-color: rgba(240, 165, 0, 0.28);
+  background: linear-gradient(135deg, rgba(240, 165, 0, 0.08), rgba(0, 212, 170, 0.04));
+}
+
 .topic-video-header h3 {
   font-family: var(--font-display);
   font-size: 1.25rem;

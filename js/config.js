@@ -15,6 +15,28 @@ const PORTFOLIO_CONFIG = {
   },
 
   
+  studentVideos: {
+    markov: {
+      id: 'IAkib1s6ztE',
+      title: 'Explicación paso a paso — Análisis Markov',
+      description: 'Video propio: resolución del ejercicio de cuota de mercado retail en Limón.',
+      channel: 'Jurguen Salas Herrera',
+    },
+    simulation: {
+      id: 'foEbjjo1ZSw',
+      title: 'Explicación paso a paso — Simulación Monte Carlo',
+      description: 'Video propio: simulación de la terminal de aduanas (escenarios A, B y C).',
+      channel: 'Jurguen Salas Herrera',
+    },
+    networks: {
+      id: 'lUks2i_i4ng',
+      title: 'Explicación paso a paso — Modelos de redes',
+      description: 'Video propio: Dijkstra (ruta más corta) y Kruskal (árbol mínimo) en la red logística.',
+      channel: 'Jurguen Salas Herrera',
+    },
+  },
+
+  
   video: {
     type: 'youtube',
     url: 'https://www.youtube.com/embed/boiCzzgww34',
