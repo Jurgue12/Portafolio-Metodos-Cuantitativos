@@ -228,7 +228,9 @@
           <div class="split-layout">
             <div class="panel">
               <h3 class="panel-title">Tabla de probabilidades</h3>
-              <table class="data-table" id="simTableA"></table>
+              <div class="table-scroll-wrap">
+                <table class="data-table" id="simTableA"></table>
+              </div>
               <p class="theoretical">E(X) teórico = <strong>34.5 min</strong></p>
             </div>
             <div class="panel">
@@ -249,7 +251,9 @@
           <div class="split-layout">
             <div class="panel">
               <h3 class="panel-title">Demanda de marchamos</h3>
-              <table class="data-table" id="simTableB"></table>
+              <div class="table-scroll-wrap">
+                <table class="data-table" id="simTableB"></table>
+              </div>
               <p class="theoretical">E(X) teórico = <strong>117.5 u/día</strong></p>
             </div>
             <div class="panel">
@@ -268,7 +272,9 @@
           <div class="split-layout">
             <div class="panel">
               <h3 class="panel-title">Días hasta falla del escáner</h3>
-              <table class="data-table" id="simTableC"></table>
+              <div class="table-scroll-wrap">
+                <table class="data-table" id="simTableC"></table>
+              </div>
               <p class="theoretical">E(X) teórico = <strong>21 días</strong></p>
             </div>
             <div class="panel">
@@ -434,16 +440,18 @@
           <div class="split-layout">
             <div class="panel">
               <h3 class="panel-title">Taller textil — Recursos semanales</h3>
-              <table class="resource-table">
-                <thead>
-                  <tr><th>Recurso</th><th>Camisa</th><th>Pantalón</th><th>Disponible</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td>Tela (m)</td><td>1</td><td>2</td><td class="active-resource">10</td></tr>
-                  <tr><td>Tiempo (h)</td><td>2</td><td>1</td><td class="active-resource">11</td></tr>
-                  <tr><td>Botones (cajas)</td><td>1</td><td>1</td><td>9</td></tr>
-                </tbody>
-              </table>
+              <div class="table-scroll-wrap">
+                <table class="resource-table">
+                  <thead>
+                    <tr><th>Recurso</th><th>Camisa</th><th>Pantalón</th><th>Disponible</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Tela (m)</td><td>1</td><td>2</td><td class="active-resource">10</td></tr>
+                    <tr><td>Tiempo (h)</td><td>2</td><td>1</td><td class="active-resource">11</td></tr>
+                    <tr><td>Botones (cajas)</td><td>1</td><td>1</td><td>9</td></tr>
+                  </tbody>
+                </table>
+              </div>
               <p class="formula">Max Z = 60x₁ + 50x₂</p>
               <p class="formula-sub">s.a. x₁ + 2x₂ ≤ 10 · 2x₁ + x₂ ≤ 11 · x₁ + x₂ ≤ 9 · x₁, x₂ ∈ ℤ⁺</p>
             </div>
