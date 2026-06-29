@@ -1,0 +1,57 @@
+DECISIONLAB LIMON — PORTAFOLIO INTERACTIVO
+
+Jurguen Salas Herrera · C27067 · IF7200 · UCR Sede del Caribe
+
+
+
+COMO ABRIRLO (para la profesora o quien evalua)
+
+==============================================
+
+1. Descomprima la carpeta "portfolio" si viene en ZIP.
+
+2. Doble clic en:  ABRIR_PORTAFOLIO.bat
+
+   (o doble clic en index.html)
+
+
+
+No necesita Python, servidor ni programacion.
+
+Solo un navegador (Chrome, Edge o Firefox) e internet para los videos de YouTube.
+
+
+
+QUE INCLUYE
+
+===========
+
+- 6 temas del curso con ejercicios interactivos
+
+- Botones "Solucion paso a paso" y descarga de PDF por ejercicio
+
+- Videos de contexto historico (se abren en YouTube al hacer clic)
+
+- Resumenes ejecutivos de las 6 presentaciones en vivo (1 hoja por tema)
+
+VIDEO DE PRESENTACION
+
+=============================================
+
+Video general del portafolio (9 minutos) en YouTube:
+
+https://youtu.be/boiCzzgww34
+
+
+
+Aparece en la seccion "Presentacion" al final del sitio.
+
+
+
+SOPORTE
+
+=======
+
+Si algo no se ve bien, pruebe otro navegador o verifique conexion a internet.
+
+

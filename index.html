@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DecisionLab Limón — Portafolio Cuantitativo</title>
+  <meta name="description" content="Portafolio interactivo — Métodos Cuantitativos para la Toma de Decisiones, UCR Sede del Caribe">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/solutions.css">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <div class="loader-inner">
+      <div class="loader-ring"></div>
+      <span class="loader-text">Cargando DecisionLab</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <a href="#hero" class="nav-brand">
+      <span class="brand-icon">◈</span>
+      <span class="brand-text">DecisionLab<span class="brand-accent">Limón</span></span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#hero" data-section="hero">Inicio</a></li>
+      <li><a href="#overview" data-section="overview">Panorama</a></li>
+      <li><a href="#markov" data-section="markov">Markov</a></li>
+      <li><a href="#control" data-section="control">Control</a></li>
+      <li><a href="#simulation" data-section="simulation">Simulación</a></li>
+      <li><a href="#networks" data-section="networks">Redes</a></li>
+      <li><a href="#transport" data-section="transport">Transporte</a></li>
+      <li><a href="#programming" data-section="programming">Programación</a></li>
+      <li><a href="#presentacion" data-section="presentacion">Video</a></li>
+    </ul>
+    <button type="button" class="nav-pres-btn btn-presentation-mode" title="Modo presentación — pantalla limpia">▶ Presentar</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero" id="hero">
+    <div class="hero-bg">
+      <canvas id="heroCanvas"></canvas>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge reveal">IF7200 · UCR Sede del Caribe</div>
+      <h1 class="hero-title reveal">
+        <span class="line">Decisiones</span>
+        <span class="line accent">cuantitativas</span>
+        <span class="line subtle">en la costa caribeña</span>
+      </h1>
+      <p class="hero-desc reveal">
+        Portafolio interactivo de métodos analíticos aplicados a Limón:
+        logística portuaria, retail, distribución y optimización productiva.
+      </p>
+      <p class="hero-author reveal">
+        Jurguen Salas Herrera · Carné C27067
+      </p>
+      <div class="hero-actions reveal">
+        <a href="#overview" class="btn btn-primary">Explorar portafolio</a>
+        <button type="button" class="btn btn-accent btn-presentation-mode" id="btnPresentationMode" title="Recorrer secciones en pantalla limpia">
+          ▶ Modo presentación
+        </button>
+        <a href="#markov" class="btn btn-ghost">Ver resoluciones</a>
+      </div>
+      <div class="hero-stats reveal">
+        <div class="stat">
+          <span class="stat-value" data-count="6">0</span>
+          <span class="stat-label">Temas del curso</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" data-count="6">0</span>
+          <span class="stat-label">Resueltos</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">100%</span>
+          <span class="stat-label">Interactivo</span>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true">
+      <span>Desliza</span>
+      <div class="scroll-line"></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Overview -->
+    <section class="section" id="overview">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">01 · Panorama</span>
+          <h2>Un ecosistema de decisiones conectadas</h2>
+          <p>Cada ejercicio resuelve un problema real de la cadena logística y comercial de Limón. Navega por tema o explora las herramientas interactivas.</p>
+        </div>
+
+        <div class="progress-card reveal">
+          <div class="progress-ring-wrap">
+            <svg class="progress-ring" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="52"/>
+              <circle class="ring-fill" cx="60" cy="60" r="52" id="progressRing"/>
+            </svg>
+            <div class="progress-center">
+              <span class="progress-num" id="progressNum">6/6</span>
+              <span class="progress-label">completo</span>
+            </div>
+          </div>
+          <div class="progress-info">
+            <h3>Estado del portafolio</h3>
+            <p>Los <strong>6 temas</strong> del curso están resueltos e integrados con solución interactiva y exportación a PDF.</p>
+            <div class="topic-pills" id="topicPills"></div>
+          </div>
+        </div>
+
+        <div class="history-overview reveal panel" id="historyOverview">
+          <div class="history-overview-header">
+            <span class="topic-video-tag">◷ Aprende la historia</span>
+            <h3>Origen de los métodos del curso</h3>
+            <p>Videos de YouTube sobre el origen de cada método. Haz clic en <strong>▶ Ver video</strong>; se abre en YouTube (no hace falta instalar nada).</p>
+          </div>
+          <div class="history-overview-grid" id="historyOverviewGrid"></div>
+        </div>
+
+        <div class="card-grid" id="topicCards"></div>
+      </div>
+    </section>
+
+    <!-- Markov -->
+    <section class="section section-alt" id="markov">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">02 · Análisis Markov</span>
+          <h2>Supermercados en Limón</h2>
+          <p>Pronóstico de participación de mercado: Maxi Palí, Megasuper y comercios locales.</p>
+        </div>
+
+        <div class="context-card reveal" id="ctx-markov"></div>
+
+        <div class="split-layout">
+          <div class="panel reveal">
+            <h3 class="panel-title">Matriz de transición</h3>
+            <div class="matrix-wrap" id="markovMatrix"></div>
+            <div class="period-controls">
+              <button class="btn btn-sm" id="markovPrev" disabled>← Anterior</button>
+              <span class="period-label">Período <strong id="markovPeriod">0</strong> / 10</span>
+              <button class="btn btn-sm btn-primary" id="markovNext">Siguiente →</button>
+              <button class="btn btn-sm btn-ghost" id="markovSteady">Estado estable ∞</button>
+            </div>
+            <div class="markov-forecast-wrap">
+              <h3 class="panel-title" style="margin-top:1.25rem">Tabla de pronóstico (P0 – P10)</h3>
+              <div id="markovForecastTable"></div>
+            </div>
+          </div>
+          <div class="panel reveal">
+            <h3 class="panel-title">Evolución de cuota de mercado</h3>
+            <div class="chart-wrap"><canvas id="markovChart"></canvas></div>
+            <div class="result-cards" id="markovResults"></div>
+          </div>
+        </div>
+
+        <div class="exercise-toolbar reveal" id="toolbar-markov"></div>
+      </div>
+    </section>
+
+    <!-- Control estadístico -->
+    <section class="section" id="control">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">03 · Control Estadístico</span>
+          <h2>Corte preciso de alambre</h2>
+          <p>Gráficos de control X̄–R con 24 subgrupos horarios (n = 4). Verificación de estabilidad del proceso.</p>
+        </div>
+
+        <div class="context-card reveal" id="ctx-control"></div>
+
+        <div class="split-layout">
+          <div class="panel reveal">
+            <h3 class="panel-title">Estadísticos y límites de control</h3>
+            <div class="control-stats" id="controlStats"></div>
+            <h3 class="panel-title" style="margin-top:1.25rem">Datos por subgrupo (24 horas)</h3>
+            <div class="control-table-wrap" id="controlTable"></div>
+          </div>
+          <div class="panel reveal">
+            <h3 class="panel-title">Gráfico X̄ — promedios</h3>
+            <div class="chart-wrap chart-wrap-sm"><canvas id="controlXbarChart"></canvas></div>
+            <h3 class="panel-title" style="margin-top:1rem">Gráfico R — rangos</h3>
+            <div class="chart-wrap chart-wrap-sm"><canvas id="controlRChart"></canvas></div>
+            <div class="result-cards" id="controlResults"></div>
+          </div>
+        </div>
+
+        <div class="exercise-toolbar reveal" id="toolbar-control"></div>
+      </div>
+    </section>
+
+    <!-- Simulation -->
+    <section class="section section-alt" id="simulation">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">04 · Simulación Monte Carlo</span>
+          <h2>Terminal de Aduanas de Limón</h2>
+          <p>Tres escenarios: colas de inspección, control de marchamos y mantenimiento del escáner.</p>
+        </div>
+
+        <div class="context-card reveal" id="ctx-simulation"></div>
+
+        <div class="tab-bar reveal" role="tablist">
+          <button class="tab active" data-tab="sim-a" role="tab">Parte A · Colas</button>
+          <button class="tab" data-tab="sim-b" role="tab">Parte B · Insumos</button>
+          <button class="tab" data-tab="sim-c" role="tab">Parte C · Mantenimiento</button>
+        </div>
+
+        <div class="sim-panel active reveal" id="sim-a">
+          <div class="split-layout">
+            <div class="panel">
+              <h3 class="panel-title">Tabla de probabilidades</h3>
+              <table class="data-table" id="simTableA"></table>
+              <p class="theoretical">E(X) teórico = <strong>34.5 min</strong></p>
+            </div>
+            <div class="panel">
+              <h3 class="panel-title">Simulación animada (N=10)</h3>
+              <div class="sim-controls">
+                <button class="btn btn-primary" id="simRunA">▶ Ejecutar simulación</button>
+                <button class="btn btn-ghost" id="simResetA">Reiniciar</button>
+              </div>
+              <div class="sim-timeline" id="simTimelineA"></div>
+              <div class="sim-result" id="simResultA">
+                <span>Promedio simulado: <strong>—</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sim-panel reveal" id="sim-b">
+          <div class="split-layout">
+            <div class="panel">
+              <h3 class="panel-title">Demanda de marchamos</h3>
+              <table class="data-table" id="simTableB"></table>
+              <p class="theoretical">E(X) teórico = <strong>117.5 u/día</strong></p>
+            </div>
+            <div class="panel">
+              <h3 class="panel-title">Simulación (N=10)</h3>
+              <div class="sim-controls">
+                <button class="btn btn-primary" id="simRunB">▶ Ejecutar simulación</button>
+                <button class="btn btn-ghost" id="simResetB">Reiniciar</button>
+              </div>
+              <div class="sim-timeline" id="simTimelineB"></div>
+              <div class="sim-result" id="simResultB"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sim-panel reveal" id="sim-c">
+          <div class="split-layout">
+            <div class="panel">
+              <h3 class="panel-title">Días hasta falla del escáner</h3>
+              <table class="data-table" id="simTableC"></table>
+              <p class="theoretical">E(X) teórico = <strong>21 días</strong></p>
+            </div>
+            <div class="panel">
+              <h3 class="panel-title">Simulación (N=10)</h3>
+              <div class="sim-controls">
+                <button class="btn btn-primary" id="simRunC">▶ Ejecutar simulación</button>
+                <button class="btn btn-ghost" id="simResetC">Reiniciar</button>
+              </div>
+              <div class="sim-timeline" id="simTimelineC"></div>
+              <div class="sim-result" id="simResultC"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-toolbar reveal" id="toolbar-simulation"></div>
+      </div>
+    </section>
+
+    <!-- Networks -->
+    <section class="section" id="networks">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">05 · Modelos de Redes</span>
+          <h2>Red logística del Puerto de Limón</h2>
+          <p>Dijkstra (ruta más corta) y Kruskal (árbol de expansión mínima).</p>
+        </div>
+
+        <div class="context-card reveal" id="ctx-networks"></div>
+
+        <div class="network-layout reveal">
+          <div class="network-viz">
+            <svg id="networkSvg" viewBox="0 0 600 380" aria-label="Grafo de red logística"></svg>
+            <div class="network-legend">
+              <button class="legend-btn active" data-mode="shortest">Ruta más corta</button>
+              <button class="legend-btn" data-mode="mst">Árbol mínimo</button>
+              <button class="legend-btn" data-mode="all">Red completa</button>
+            </div>
+          </div>
+          <div class="network-info panel">
+            <h3 class="panel-title" id="networkTitle">Ruta más corta: A → F</h3>
+            <p id="networkDesc">Algoritmo de Dijkstra desde el Puerto de Limón (A) hasta el destino (F).</p>
+            <div class="network-result" id="networkResult">
+              <span class="big-num">9</span>
+              <span class="big-unit">km</span>
+            </div>
+            <ol class="step-list" id="networkSteps"></ol>
+          </div>
+        </div>
+
+        <div class="exercise-toolbar reveal" id="toolbar-networks"></div>
+      </div>
+    </section>
+
+    <!-- Transport -->
+    <section class="section section-alt" id="transport">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">06 · Transporte y Asignación</span>
+          <h2>Distribución desde Moín</h2>
+          <p>Método de Vogel, salto de piedra y asignación de camiones.</p>
+        </div>
+
+        <div class="context-card reveal" id="ctx-transport"></div>
+
+        <div class="tab-bar reveal">
+          <button class="tab active" data-tab="trans-vogel">Transporte · Vogel</button>
+          <button class="tab" data-tab="trans-assign">Asignación · Camiones</button>
+        </div>
+
+        <div class="trans-panel active reveal" id="trans-vogel">
+          <div class="split-layout">
+            <div class="panel">
+              <h3 class="panel-title">Matriz de ganancia (₡ miles/t)</h3>
+              <div id="transportMatrix"></div>
+              <p class="theoretical">Ganancia total óptima: <strong>₡3 310 000</strong></p>
+            </div>
+            <div class="panel">
+              <h3 class="panel-title">Solución Vogel + Salto de piedra</h3>
+              <div id="transportSolution"></div>
+              <p class="conclusion">Δ = 0 en todas las celdas vacías → solución óptima confirmada.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="trans-panel reveal" id="trans-assign">
+          <div class="split-layout">
+            <div class="panel">
+              <h3 class="panel-title">Rendimiento camión × ruta</h3>
+              <div id="assignMatrix"></div>
+            </div>
+            <div class="panel">
+              <h3 class="panel-title">Asignación óptima</h3>
+              <div class="assign-result" id="assignResult"></div>
+              <p class="theoretical">Rendimiento máximo: <strong>Z = 365</strong></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-toolbar reveal" id="toolbar-transport"></div>
+      </div>
+    </section>
+
+    <!-- Programming -->
+    <section class="section" id="programming">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">07 · Programación</span>
+          <h2>Optimización con restricciones</h2>
+          <p>Programación por metas, no lineal y entera (taller textil).</p>
+        </div>
+
+        <div class="context-card reveal" id="ctx-programming"></div>
+
+        <div class="tab-bar reveal">
+          <button class="tab active" data-tab="prog-goals">Por metas</button>
+          <button class="tab" data-tab="prog-nonlinear">No lineal</button>
+          <button class="tab" data-tab="prog-integer">Entera · Textil</button>
+        </div>
+
+        <div class="prog-panel active reveal" id="prog-goals">
+          <div class="split-layout">
+            <div class="panel">
+              <h3 class="panel-title">Panadería La Espiga Dorada</h3>
+              <div class="goal-sliders">
+                <div class="slider-group">
+                  <label>Pan artesanal (x): <span id="goalXVal">40</span> lotes</label>
+                  <input type="range" id="goalX" min="0" max="80" value="40">
+                </div>
+                <div class="slider-group">
+                  <label>Repostería (y): <span id="goalYVal">20</span> lotes</label>
+                  <input type="range" id="goalY" min="0" max="50" value="20">
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <h3 class="panel-title">Cumplimiento de metas</h3>
+              <div class="goal-meters" id="goalMeters"></div>
+              <p class="conclusion" id="goalConclusion"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="prog-panel reveal" id="prog-nonlinear">
+          <div class="split-layout">
+            <div class="panel">
+              <h3 class="panel-title">Fábrica — Productos A y B</h3>
+              <p class="formula">Max Z = 35x − x² + 42y − 2y²</p>
+              <p class="formula-sub">s.a. 2x + 3y ≤ 120 · x + 2y ≤ 80 · x, y ≥ 0</p>
+              <div class="optimal-point">
+                <div class="opt-item"><span>x*</span><strong>17.5</strong></div>
+                <div class="opt-item"><span>y*</span><strong>10.5</strong></div>
+                <div class="opt-item highlight"><span>Z*</span><strong>$526.75</strong></div>
+              </div>
+            </div>
+            <div class="panel">
+              <h3 class="panel-title">Región factible y óptimo</h3>
+              <div class="chart-wrap"><canvas id="nonlinearChart"></canvas></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="prog-panel reveal" id="prog-integer">
+          <div class="split-layout">
+            <div class="panel">
+              <h3 class="panel-title">Taller textil — Recursos semanales</h3>
+              <table class="resource-table">
+                <thead>
+                  <tr><th>Recurso</th><th>Camisa</th><th>Pantalón</th><th>Disponible</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Tela (m)</td><td>1</td><td>2</td><td class="active-resource">10</td></tr>
+                  <tr><td>Tiempo (h)</td><td>2</td><td>1</td><td class="active-resource">11</td></tr>
+                  <tr><td>Botones (cajas)</td><td>1</td><td>1</td><td>9</td></tr>
+                </tbody>
+              </table>
+              <p class="formula">Max Z = 60x₁ + 50x₂</p>
+              <p class="formula-sub">s.a. x₁ + 2x₂ ≤ 10 · 2x₁ + x₂ ≤ 11 · x₁ + x₂ ≤ 9 · x₁, x₂ ∈ ℤ⁺</p>
+            </div>
+            <div class="panel">
+              <h3 class="panel-title">Solución óptima entera</h3>
+              <div class="optimal-point">
+                <div class="opt-item"><span>Camisas x₁*</span><strong>4</strong></div>
+                <div class="opt-item"><span>Pantalones x₂*</span><strong>3</strong></div>
+                <div class="opt-item highlight"><span>Z*</span><strong>$390</strong></div>
+              </div>
+              <div class="chart-wrap" style="margin-top:1.25rem"><canvas id="integerChart"></canvas></div>
+              <p class="conclusion" style="margin-top:1rem">Vértice (4, 3): tela y tiempo activos al 100%; botones con holgura de 2 cajas.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-toolbar reveal" id="toolbar-programming"></div>
+      </div>
+    </section>
+
+    <!-- Presentación en video -->
+    <section class="section section-alt" id="presentacion">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">08 · Presentación</span>
+          <h2>Video de presentación</h2>
+          <p>Recorrido general del portafolio (9 minutos): navegación, los seis temas, soluciones interactivas y descarga de PDFs.</p>
+        </div>
+
+        <div class="video-layout video-layout-single reveal">
+          <div class="video-player panel" id="videoPlayer">
+            <div class="video-placeholder" id="videoPlaceholder">
+              <span class="video-placeholder-icon">▶</span>
+            </div>
+            <iframe id="videoEmbed" class="video-embed hidden" title="Video general del portafolio" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <div class="export-all-card reveal panel">
+          <h3 class="panel-title">Resúmenes ejecutivos (presentaciones en vivo)</h3>
+          <p class="export-all-desc">Síntesis de 1 hoja máximo por cada uno de los 6 temas expuestos en clase. Imprimible o guardar como PDF.</p>
+          <a href="resumenes-ejecutivos.html" class="btn btn-primary" style="display:inline-flex;margin-bottom:1.5rem">Ver resúmenes ejecutivos →</a>
+        </div>
+
+        <div class="export-all-card reveal panel">
+          <h3 class="panel-title">Resoluciones en PDF (punto 5)</h3>
+          <p class="export-all-desc">Descarga cada ejercicio como PDF formal para entrega impresa o adjunto en Moodle. También disponible dentro de cada modal con el botón <strong>Descargar PDF</strong>.</p>
+          <div class="export-grid" id="exportGrid"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- PDF export overlay (visible briefly while generating) -->
+  <div class="pdf-export-overlay" id="pdfExportOverlay" aria-hidden="true">
+    <div class="pdf-export-status">
+      <div class="loader-ring"></div>
+      <p>Generando PDF…</p>
+    </div>
+  </div>
+
+  <!-- History video modal (YouTube in-app) -->
+  <div class="history-video-modal" id="historyVideoModal" role="dialog" aria-modal="true" aria-labelledby="historyVideoTitle" hidden>
+    <div class="history-video-backdrop" id="historyVideoBackdrop"></div>
+    <div class="history-video-panel">
+      <div class="history-video-header">
+        <h3 id="historyVideoTitle">Video histórico</h3>
+        <button type="button" class="history-video-close" id="historyVideoClose" aria-label="Cerrar reproductor">×</button>
+      </div>
+      <div class="history-video-embed" id="historyVideoEmbed"></div>
+      <p class="history-video-hint">Si el video no carga, usa el enlace «Abrir en YouTube» en cada módulo.</p>
+    </div>
+  </div>
+
+  <!-- Solution Modal -->
+  <div class="solution-modal" id="solutionModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="solution-modal-backdrop" id="modalBackdrop"></div>
+    <div class="solution-modal-panel">
+      <div class="solution-modal-header">
+        <div>
+          <h2 id="modalTitle">Solución</h2>
+          <p class="subtitle" id="modalSubtitle"></p>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-export-pdf" id="modalExportPdf" title="Descargar PDF">
+            <span>↓</span> PDF
+          </button>
+          <button type="button" class="btn-export-print" id="modalPrint" title="Imprimir o guardar como PDF">
+            <span>⎙</span>
+          </button>
+          <button class="solution-modal-close" id="modalClose" aria-label="Cerrar">×</button>
+        </div>
+      </div>
+      <div class="solution-modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="brand-icon">◈</span>
+        DecisionLab Limón
+      </div>
+      <p>Jurguen Salas Herrera · C27067 · Métodos Cuantitativos · UCR Sede del Caribe · IF7200</p>
+      <p class="footer-meta">Portafolio interactivo · <span id="footerStatus">6 de 6 módulos activos</span></p>
+    </div>
+  </footer>
+
+  <div class="presentation-bar" id="presentationBar">
+    <button type="button" class="btn btn-ghost btn-sm" id="presPrev">← Anterior</button>
+    <span id="presLabel" style="font-size:0.85rem;color:var(--text-muted)">Modo presentación</span>
+    <button type="button" class="btn btn-primary btn-sm" id="presNext">Siguiente →</button>
+    <button type="button" class="btn btn-ghost btn-sm" id="presExit">Salir</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/solutions-data.js"></script>
+  <script src="js/pdf-generator.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
