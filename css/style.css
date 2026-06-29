@@ -443,6 +443,8 @@ body:hover .cursor-glow { opacity: 1; }
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 clamp(1rem, 4vw, 2rem);
+  min-width: 0;
+  width: 100%;
 }
 
 .section-header {
@@ -611,6 +613,12 @@ body:hover .cursor-glow { opacity: 1; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
+  min-width: 0;
+}
+
+.split-layout > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .panel {
@@ -618,6 +626,8 @@ body:hover .cursor-glow { opacity: 1; }
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  min-width: 0;
+  max-width: 100%;
 }
 
 .panel-title {
@@ -629,11 +639,32 @@ body:hover .cursor-glow { opacity: 1; }
   margin-bottom: 1.25rem;
 }
 
+/* Horizontal scroll for wide tables (especially mobile) */
+.table-scroll-wrap,
+.matrix-wrap,
+.markov-forecast-wrap,
+.transport-scroll-wrap,
+.control-table-wrap,
+.scroll-x-host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  contain: inline-size;
+}
+
 /* Markov matrix */
-.matrix-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
+.matrix-wrap {
+  margin-bottom: 1.5rem;
+}
 
 .markov-table {
-  width: 100%;
+  width: auto;
+  min-width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
 }
@@ -874,11 +905,21 @@ body:hover .cursor-glow { opacity: 1; }
 .sim-panel.active, .trans-panel.active, .prog-panel.active { display: block; }
 
 /* Data tables */
+.table-scroll-wrap {
+  margin-bottom: 1rem;
+  border-radius: var(--radius-sm);
+}
+
+.table-scroll-wrap:last-child {
+  margin-bottom: 0;
+}
+
 .data-table {
-  width: 100%;
+  width: auto;
+  min-width: 100%;
   border-collapse: collapse;
   font-size: 0.88rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .data-table th,
@@ -1059,10 +1100,16 @@ body:hover .cursor-glow { opacity: 1; }
 .step-list li { padding: 6px 0; }
 
 /* Transport matrices */
+.transport-scroll-wrap {
+  margin-bottom: 0.5rem;
+}
+
 .transport-grid {
   display: grid;
   gap: 2px;
   font-size: 0.82rem;
+  width: max-content;
+  min-width: 420px;
 }
 
 .transport-cell {
@@ -1368,6 +1415,61 @@ body:hover .cursor-glow { opacity: 1; }
 
   .export-grid {
     grid-template-columns: 1fr;
+  }
+
+  .table-scroll-wrap,
+  .matrix-wrap,
+  .markov-forecast-wrap,
+  .transport-scroll-wrap,
+  .control-table-wrap {
+    margin-left: 0;
+    margin-right: 0;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+
+  .table-scroll-wrap th,
+  .table-scroll-wrap td,
+  .matrix-wrap th,
+  .matrix-wrap td,
+  .markov-forecast-wrap th,
+  .markov-forecast-wrap td,
+  .control-table-wrap th,
+  .control-table-wrap td,
+  .transport-scroll-wrap .transport-cell {
+    white-space: nowrap;
+  }
+
+  .data-table,
+  .markov-table,
+  .markov-forecast,
+  .resource-table,
+  .control-sample-table {
+    font-size: 0.76rem;
+  }
+
+  .data-table th,
+  .data-table td,
+  .markov-table th,
+  .markov-table td,
+  .markov-forecast th,
+  .markov-forecast td,
+  .resource-table th,
+  .resource-table td {
+    padding: 8px 10px;
+  }
+
+  .transport-grid {
+    font-size: 0.68rem;
+  }
+
+  .transport-cell {
+    padding: 8px 6px;
+  }
+
+  .transport-cell.header {
+    font-size: 0.62rem;
+    line-height: 1.25;
   }
 
   .footer-inner {

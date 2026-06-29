@@ -123,6 +123,54 @@
   let integerChart = null;
   let currentSolutionId = null;
 
+  function wrapWideTables(root = document) {
+    const scrollHost = '.table-scroll-wrap, .matrix-wrap, .markov-forecast-wrap, .transport-scroll-wrap, .control-table-wrap, .scroll-x-host';
+    const selector = [
+      '.panel .data-table:not(.control-sample-table)',
+      '.panel .resource-table',
+      '#markovForecastTable table',
+      '#controlStats table',
+      '.step-body table',
+      '.solution-content table',
+    ].join(', ');
+
+    root.querySelectorAll(selector).forEach((table) => {
+      if (table.closest(scrollHost)) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'table-scroll-wrap scroll-x-host';
+      table.parentElement.insertBefore(wrap, table);
+      wrap.appendChild(table);
+    });
+  }
+
+  function fixMobileTableScroll() {
+    const hosts = document.querySelectorAll(
+      '.table-scroll-wrap, .matrix-wrap, .markov-forecast-wrap, .transport-scroll-wrap, .control-table-wrap'
+    );
+
+    hosts.forEach((host) => {
+      host.classList.add('scroll-x-host');
+      const inner = host.querySelector('table, .transport-grid');
+      if (!inner) return;
+
+      inner.style.width = 'max-content';
+      inner.style.minWidth = '100%';
+      inner.style.maxWidth = 'none';
+
+      const needsScroll = inner.scrollWidth > host.clientWidth + 4;
+      host.classList.toggle('has-scroll', needsScroll);
+      if (needsScroll) {
+        inner.style.minWidth = `${inner.scrollWidth}px`;
+      }
+    });
+  }
+
+  let scrollFixTimer;
+  function scheduleScrollFix() {
+    clearTimeout(scrollFixTimer);
+    scrollFixTimer = setTimeout(fixMobileTableScroll, 50);
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     initLoader();
     initTheme();
@@ -145,11 +193,17 @@
     initTabs();
     initCounters();
     initPresentationSection();
+    wrapWideTables();
+    scheduleScrollFix();
+    window.addEventListener('resize', scheduleScrollFix, { passive: true });
   });
 
   function initLoader() {
+    const loader = document.getElementById('loader');
+    if (!loader) return;
     setTimeout(() => {
-      document.getElementById('loader').classList.add('hidden');
+      loader.classList.add('hidden');
+      scheduleScrollFix();
     }, 1200);
   }
 
@@ -667,6 +721,8 @@
     document.getElementById('modalTitle').textContent = data.title;
     document.getElementById('modalSubtitle').textContent = data.subtitle;
     document.getElementById('modalBody').innerHTML = buildSolutionHtml(id);
+    wrapWideTables(document.getElementById('modalBody'));
+    scheduleScrollFix();
     document.getElementById('solutionModal').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -835,6 +891,7 @@
       markovPeriod = 'steady';
       updateMarkov();
     });
+    scheduleScrollFix();
   }
 
   function renderMarkovForecastTable() {
@@ -885,6 +942,7 @@
     renderMarkovResults();
     renderMarkovForecastTable();
     highlightMarkovChart();
+    scheduleScrollFix();
   }
 
   function renderMarkovResults() {
@@ -953,6 +1011,7 @@
     renderControlTable();
     renderControlResults();
     initControlCharts();
+    scheduleScrollFix();
   }
 
   function renderControlStats() {
@@ -960,13 +1019,15 @@
     if (!el) return;
     const { xbarBar, rBar, constants, n, samples } = CONTROL;
     el.innerHTML = `
-      <table class="data-table control-limits-table">
-        <thead><tr><th>Gráfico</th><th>LCI</th><th>LC</th><th>LCS</th></tr></thead>
-        <tbody>
-          <tr><td>X̄</td><td>${CONTROL.limits.xbar.lci.toFixed(3)}</td><td>${xbarBar.toFixed(3)}</td><td>${CONTROL.limits.xbar.lcs.toFixed(3)}</td></tr>
-          <tr><td>R</td><td>${CONTROL.limits.r.lci.toFixed(3)}</td><td>${rBar.toFixed(3)}</td><td>${CONTROL.limits.r.lcs.toFixed(3)}</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll-wrap scroll-x-host">
+        <table class="data-table control-limits-table">
+          <thead><tr><th>Gráfico</th><th>LCI</th><th>LC</th><th>LCS</th></tr></thead>
+          <tbody>
+            <tr><td>X̄</td><td>${CONTROL.limits.xbar.lci.toFixed(3)}</td><td>${xbarBar.toFixed(3)}</td><td>${CONTROL.limits.xbar.lcs.toFixed(3)}</td></tr>
+            <tr><td>R</td><td>${CONTROL.limits.r.lci.toFixed(3)}</td><td>${rBar.toFixed(3)}</td><td>${CONTROL.limits.r.lcs.toFixed(3)}</td></tr>
+          </tbody>
+        </table>
+      </div>
       <ul class="control-meta">
         <li><span>Subgrupos</span><strong>${samples}</strong></li>
         <li><span>Tamaño n</span><strong>${n}</strong></li>
@@ -1102,6 +1163,7 @@
       document.getElementById(`simRun${key.toUpperCase()}`).addEventListener('click', () => runSim(key));
       document.getElementById(`simReset${key.toUpperCase()}`).addEventListener('click', () => resetSim(key));
     });
+    scheduleScrollFix();
   }
 
   function buildSimTable(key) {
@@ -1250,6 +1312,7 @@
     renderTransportSolution();
     renderAssignMatrix();
     renderAssignResult();
+    scheduleScrollFix();
   }
 
   function renderTransportMatrix() {
@@ -1263,7 +1326,7 @@
       row.forEach(v => html += `<div class="transport-cell">${v}<span class="sub">₡k/t</span></div>`);
     });
     html += '</div>';
-    document.getElementById('transportMatrix').innerHTML = html;
+    document.getElementById('transportMatrix').innerHTML = `<div class="transport-scroll-wrap scroll-x-host">${html}</div>`;
   }
 
   function renderTransportSolution() {
@@ -1280,7 +1343,7 @@
       });
     });
     html += '</div>';
-    document.getElementById('transportSolution').innerHTML = html;
+    document.getElementById('transportSolution').innerHTML = `<div class="transport-scroll-wrap scroll-x-host">${html}</div>`;
   }
 
   function renderAssignMatrix() {
@@ -1297,7 +1360,7 @@
       });
     });
     html += '</div>';
-    document.getElementById('assignMatrix').innerHTML = html;
+    document.getElementById('assignMatrix').innerHTML = `<div class="transport-scroll-wrap scroll-x-host">${html}</div>`;
   }
 
   function renderAssignResult() {

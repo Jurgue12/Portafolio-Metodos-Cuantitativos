@@ -9,8 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/solutions.css">
+  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/solutions.css?v=3">
+  <link rel="stylesheet" href="css/mobile-tables.css?v=3">
 </head>
 <body>
   <div class="grain" aria-hidden="true"></div>
@@ -153,14 +154,14 @@
         <div class="split-layout">
           <div class="panel reveal">
             <h3 class="panel-title">Matriz de transición</h3>
-            <div class="matrix-wrap" id="markovMatrix"></div>
+            <div class="matrix-wrap scroll-x-host" id="markovMatrix"></div>
             <div class="period-controls">
               <button class="btn btn-sm" id="markovPrev" disabled>← Anterior</button>
               <span class="period-label">Período <strong id="markovPeriod">0</strong> / 10</span>
               <button class="btn btn-sm btn-primary" id="markovNext">Siguiente →</button>
               <button class="btn btn-sm btn-ghost" id="markovSteady">Estado estable ∞</button>
             </div>
-            <div class="markov-forecast-wrap">
+            <div class="markov-forecast-wrap scroll-x-host">
               <h3 class="panel-title" style="margin-top:1.25rem">Tabla de pronóstico (P0 – P10)</h3>
               <div id="markovForecastTable"></div>
             </div>
@@ -192,7 +193,7 @@
             <h3 class="panel-title">Estadísticos y límites de control</h3>
             <div class="control-stats" id="controlStats"></div>
             <h3 class="panel-title" style="margin-top:1.25rem">Datos por subgrupo (24 horas)</h3>
-            <div class="control-table-wrap" id="controlTable"></div>
+            <div class="control-table-wrap scroll-x-host" id="controlTable"></div>
           </div>
           <div class="panel reveal">
             <h3 class="panel-title">Gráfico X̄ — promedios</h3>
@@ -228,7 +229,7 @@
           <div class="split-layout">
             <div class="panel">
               <h3 class="panel-title">Tabla de probabilidades</h3>
-              <div class="table-scroll-wrap">
+              <div class="table-scroll-wrap scroll-x-host">
                 <table class="data-table" id="simTableA"></table>
               </div>
               <p class="theoretical">E(X) teórico = <strong>34.5 min</strong></p>
@@ -251,7 +252,7 @@
           <div class="split-layout">
             <div class="panel">
               <h3 class="panel-title">Demanda de marchamos</h3>
-              <div class="table-scroll-wrap">
+              <div class="table-scroll-wrap scroll-x-host">
                 <table class="data-table" id="simTableB"></table>
               </div>
               <p class="theoretical">E(X) teórico = <strong>117.5 u/día</strong></p>
@@ -272,7 +273,7 @@
           <div class="split-layout">
             <div class="panel">
               <h3 class="panel-title">Días hasta falla del escáner</h3>
-              <div class="table-scroll-wrap">
+              <div class="table-scroll-wrap scroll-x-host">
                 <table class="data-table" id="simTableC"></table>
               </div>
               <p class="theoretical">E(X) teórico = <strong>21 días</strong></p>
@@ -440,7 +441,7 @@
           <div class="split-layout">
             <div class="panel">
               <h3 class="panel-title">Taller textil — Recursos semanales</h3>
-              <div class="table-scroll-wrap">
+              <div class="table-scroll-wrap scroll-x-host">
                 <table class="resource-table">
                   <thead>
                     <tr><th>Recurso</th><th>Camisa</th><th>Pantalón</th><th>Disponible</th></tr>
@@ -563,9 +564,9 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-  <script src="js/config.js"></script>
-  <script src="js/solutions-data.js"></script>
-  <script src="js/pdf-generator.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/config.js?v=3"></script>
+  <script src="js/solutions-data.js?v=3"></script>
+  <script src="js/pdf-generator.js?v=3"></script>
+  <script src="js/app.js?v=3"></script>
 </body>
 </html>

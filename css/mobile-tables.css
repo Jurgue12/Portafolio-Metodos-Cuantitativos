@@ -1,0 +1,73 @@
+/* Mobile horizontal scroll for wide tables — load last */
+
+@media (max-width: 900px) {
+  body {
+    overflow-x: clip;
+  }
+
+  main,
+  .section,
+  .container,
+  .split-layout,
+  .split-layout > *,
+  .panel,
+  .sim-panel,
+  .trans-panel,
+  .prog-panel {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .scroll-x-host {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    contain: inline-size;
+    scrollbar-width: thin;
+  }
+
+  .scroll-x-host table,
+  .scroll-x-host .transport-grid {
+    width: max-content;
+    min-width: 100%;
+    max-width: none;
+  }
+
+  .scroll-x-host th,
+  .scroll-x-host td,
+  .scroll-x-host .transport-cell {
+    white-space: nowrap;
+  }
+
+  .scroll-x-host .transport-grid {
+    min-width: 460px;
+  }
+
+  .scroll-x-host.has-scroll {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+    padding-bottom: 2px;
+  }
+
+  .scroll-x-host.has-scroll::after {
+    content: 'Desliza horizontalmente para ver la tabla completa';
+    display: block;
+    padding: 6px 10px 4px;
+    font-size: 0.68rem;
+    color: var(--accent);
+    text-align: center;
+    letter-spacing: 0.02em;
+  }
+
+  .control-table-wrap {
+    max-height: 280px;
+    overflow: auto;
+  }
+}
