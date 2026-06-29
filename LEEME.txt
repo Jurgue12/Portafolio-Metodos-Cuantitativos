@@ -32,8 +32,6 @@ QUE INCLUYE
 
 - Videos de contexto historico (se abren en YouTube al hacer clic)
 
-- Resumenes ejecutivos de las 6 presentaciones en vivo (1 hoja por tema)
-
 VIDEO DE PRESENTACION
 
 =============================================
